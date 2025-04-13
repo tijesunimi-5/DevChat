@@ -3,17 +3,22 @@ import React, { useRef, FormEvent, useEffect } from 'react'
 import Button from './Button'
 import Link from 'next/link';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import Alert from './Alert';
 
 const Registration = () => {
-  const [progress, setProgress] = React.useState<number>(5);
+  const [progress, setProgress] = React.useState<number>(25);
   const [firstname, setFirstname] = React.useState<string>('')
   const [lastname, setLastname] = React.useState<string>('')
   const [email, setEmail] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
-  const [tag, setTag] = React.useState<string>('')
+  const [message, setMessage] = React.useState<string>('')
+  const [loading, setLoading] = React.useState<boolean>(false)
+  const router = useRouter()
 
-   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setLoading(true)
     if (!firstname || !lastname || !email || !password) {
       console.log('empty')
       return
@@ -21,28 +26,27 @@ const Registration = () => {
 
     console.log({ firstname, lastname, email, password })
     increaseProgress()
+    setMessage('Account created successfully...')
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000)
+    setTimeout(() => {
+      router.push('/Registration/login')
+    }, 6000)
   }
 
-  useEffect(() => { 
-    setTimeout(() => { 
-      setTag('Sign Up')
-    }, 1000)
-    setTag('Account SetUp')
-  })
-
   const increaseProgress = () => {
-    // setProgress(progress + 10)
-    setProgress(prev => Math.min(prev + 10, 100));
+    setProgress(prev => Math.min(prev + 25, 100));
     console.log(progress)
   }
 
   return (
     <div className='pt-12 px-2 relative pb-8'>
-      <h1 className='text-2xl font-bold uppercase text-center mt-7'>{tag}</h1>
+      <h1 className='text-2xl font-bold uppercase text-center mt-7'>Sign Up</h1>
 
       <form className='mt-5 rounded-2xl regShad p-5 overflow-hidden relative flex flex-col justify-between' onSubmit={handleSubmit}>
         <div className="progess h-2 absolute top-0 left-0 right-0  rounded-2xl w-full">
-          <span className={`bg-[#3D3C99] absolute h-2 rounded-2xl`} style={{width : `${progress}%`}}></span>
+          <span className={`bg-[#3D3C99] absolute h-2 rounded-2xl`} style={{ width: `${progress}%` }}></span>
         </div>
         <div className="inputbox mt-2">
           <input required type="text" onChange={(e) => setFirstname(e.target.value)} value={firstname} />
@@ -68,11 +72,11 @@ const Registration = () => {
           <i></i>
         </div>
 
-        <button type='submit' onClick={undefined} className={'bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20'}>
-            Sign Up
-        </button>
+        <Button types='submit' style={'bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20'}>
+          Sign Up
+        </Button>
 
-        <p className='mt-3 z-20'>Have an account already? <Link href={'/'} className='cursor-pointer underline'>Login</Link></p>
+        <p className='mt-3 z-20'>Have an account already? <Link href={'/Registration/login'} className='cursor-pointer underline'>Sign In</Link></p>
       </form>
 
       <h2 className='text-2xl font-bold text-center mt-3'>Or</h2>
@@ -81,6 +85,8 @@ const Registration = () => {
         <Button><FaGoogle className='mr-2' /> Sign up with Google</Button>
         <Button style='mt-2'><FaGithub className='mr-3' /> Sign up with Github </Button>
       </div>
+
+      {loading && (<Alert msg={message} />)}
     </div>
   )
 }

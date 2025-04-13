@@ -31,7 +31,7 @@ body {
 }
 
 .loader {
-  animation: animate 3s infinite ;
+  animation: animate 3s infinite;
 }
 
 @keyframes animate {
@@ -41,7 +41,7 @@ body {
   }
   50% {
     transform: translateX(250px);
-    background: #3D3CC9;
+    background: #3d3cc9;
   }
   /* 80% {
     background: #fff;
@@ -52,7 +52,7 @@ body {
   }
 }
 
-/* From Uiverse.io by VijinV */ 
+/* From Uiverse.io by VijinV */
 .inputbox {
   position: relative;
   width: 320px;
@@ -78,17 +78,17 @@ body {
   left: 0;
   padding: 20px 10px 10px;
   font-size: 1em;
-  color: #FFFFFF;
+  color: #ffffff;
   letter-spacing: 00.05em;
   transition: 0.5s;
   pointer-events: none;
 }
 
-.inputbox input:valid ~span,
-.inputbox input:focus ~span {
-  color: #3D3CC9;
+.inputbox input:valid ~ span,
+.inputbox input:focus ~ span {
+  color: #3d3cc9;
   transform: translateX(-10px) translateY(-34px);
-  font-size: 0,75em;
+  font-size: 0, 75em;
 }
 
 .inputbox i {
@@ -97,25 +97,26 @@ body {
   bottom: 0;
   width: 100%;
   height: 2px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 4px;
   transition: 0.5s;
   pointer-events: none;
   z-index: 9;
 }
 
-.inputbox input:valid ~i,
-.inputbox input:focus ~i {
+.inputbox input:valid ~ i,
+.inputbox input:focus ~ i {
   height: 44px;
-  background: #3D3CC9;
+  background: #3d3cc9;
 }
 
 .regShad {
-  box-shadow: 0px 0px 8px -2.5px #3D3CC9, -1px -1px 1px -0.1px #fff; 
+  box-shadow: 0px 0px 8px -2.5px #3d3cc9, -1px -1px 1px -0.1px #fff;
 }
 
 .blur {
   backdrop: transparent;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  z-index: 2;
 }

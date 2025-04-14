@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import MobileBar from "@/components/MobileBar";
 import React from "react";
+import { UserProvider } from "@/components/UserContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +32,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased sc`}
       >
-        <Header />
         {/* <MobileBar /> */}
-        {children}
+        <UserProvider>
+          <Header />
+          {children}
+        </UserProvider>
       </body>
     </html>
   );

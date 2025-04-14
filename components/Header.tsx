@@ -4,9 +4,11 @@ import { FaTimes } from 'react-icons/fa'
 import { FaBars } from 'react-icons/fa6'
 import MobileBar from './MobileBar'
 import Link from 'next/link'
+import { useUser } from './UserContext'
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false) //this state toggles the menu for mobile
+  const {user, signedIn} = useUser()
   
   return (
     <header className='flex px-3 py-1 fixed right-0 left-0 justify-between items-center border-b border-[#3D3CC9] z-50'>
@@ -17,9 +19,11 @@ const Header = () => {
 
       </div>
 
-      <div className="icon text-2xl flex items-center md:hidden  z-10" onClick={() => setIsVisible(!isVisible)}>
-        {isVisible ? <FaTimes className='transition-all duration-300 ease-in-out' /> : <FaBars className='transition-all duration-300 ease-in-out' />}
-      </div>
+      {signedIn && (
+        <div className="icon text-2xl flex items-center md:hidden  z-10" onClick={() => setIsVisible(!isVisible)}>
+          {isVisible ? <FaTimes className='transition-all duration-300 ease-in-out' /> : <FaBars className='transition-all duration-300 ease-in-out' />}
+        </div>
+      )}
       <MobileBar isVisible={isVisible} setVisible={setIsVisible} />
     </header>
   )

@@ -4,15 +4,15 @@ import Registration from "@/components/Registration";
 import MainPage from "@/components/MainPage";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/components/UserContext";
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true)
-  const [isSignedIn, setIsSignedIn] = useState<boolean>(false)
-
+  const { signedIn } = useUser()
   const router = useRouter()
 
   useEffect(() => {
-    const timer = setTimeout(() => {setLoading(false)}, 10000)
+    const timer = setTimeout(() => { setLoading(false) }, 10000)
 
     const handleLoad = () => {
       clearTimeout(timer)
@@ -31,6 +31,13 @@ export default function Home() {
     // }
   }, [])
 
-  if(loading) return <Loader />;
-  return isSignedIn ? <MainPage /> : router.push('/Registration')
+  useEffect(() => {
+    if (!signedIn && !loading) {
+      router.push('/Registration')
+    }
+  }, [signedIn, loading, router])
+
+  if (loading) return <Loader />;
+  if (!signedIn) return null
+  return <MainPage />
 }

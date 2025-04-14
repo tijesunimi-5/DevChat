@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { FaGithub, FaGoogle } from 'react-icons/fa'
 import Alert from '@/components/Alert'
 import { useRouter } from 'next/navigation'
+import { useUser } from '@/components/UserContext'
 
 const page = () => {
   const [progress, setProgress] = React.useState<number>(50);
@@ -12,6 +13,7 @@ const page = () => {
   const [password, setPassword] = React.useState<string>('')
   const [message, setMessage] = React.useState<string>('')
   const [loading, setLoading] = React.useState<boolean>(false)
+  const { setUser, setSignedIn } = useUser()
   const router = useRouter()
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -22,15 +24,26 @@ const page = () => {
       return
     }
 
-    console.log({ email, password })
-    increaseProgress()
-    setMessage('Sign In successful')
-    setTimeout(() => {
-      setLoading(false)
-    }, 5000)
-    setTimeout(() => {
-      router.push('/Registration/profileSetup')
-    }, 6000)
+    const storedUser = localStorage.getItem('user')
+    if (!storedUser) {
+      setMessage('No registered user found!')
+      return
+    }
+    const parsedUser = JSON.parse(storedUser)
+    if (email === parsedUser.email && password === parsedUser.password) {
+      setUser(parsedUser)
+      setSignedIn(true)
+      increaseProgress()
+      setMessage('Sign In successful')
+      setTimeout(() => {
+        setLoading(false)
+      }, 5000)
+      setTimeout(() => {
+        router.push('/Registration/profileSetup')
+      }, 6000)
+    } else {
+      setMessage('Invalid email or password')
+    }
   }
 
   const increaseProgress = () => {

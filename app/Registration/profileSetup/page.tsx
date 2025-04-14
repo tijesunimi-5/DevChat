@@ -11,15 +11,20 @@ const page = () => {
   const [twitterLink, setTwitterLink] = React.useState<string>('')
   const [linkedInLink, setLinkedInLink] = React.useState<string>('')
   const [websiteLink, setWebsiteLink] = React.useState<string>('')
-  const [techStack, setTechStack] = useState('Fullstack developer')//this sets the field the developer is in
-  const [loading, setLoading] = React.useState<boolean>(false)
-  const [userStack, setUserStack] = React.useState<string[]>([]) // this store the technologies used
-  const [techs, setTechs] = useState<string[]>([])
+  const [field, setField] = useState('Fullstack developer')//this sets the field the developer is in
 
-  const nextStep = () => {
-    setLoading(true)
-    increaseProgress()
-  }
+  const [loading, setLoading] = React.useState<boolean>(false)
+  const [userStack, setUserStack] = React.useState<string[]>([]) // this store the technologies used for each fields
+
+  const [techs, setTechs] = useState<string[]>([])//this store the technologies selected by the user
+  const [devInfo, setDevInfo] = useState({
+    devfield: field,
+    devStack: userStack,
+    devExperience: experience
+  }) //this store the whole details
+
+
+  
 
   const increaseProgress = () => {
     setProgress(prev => Math.min(prev + 25, 100))
@@ -27,7 +32,7 @@ const page = () => {
 
   const changeTechStack = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(e.target.value)
-    setTechStack(e.target.value)
+    setField(e.target.value)
   }
 
   useEffect(() => {
@@ -42,22 +47,23 @@ const page = () => {
       'DevOps developer': techStacks.DevOps,
     }
 
-    const selectedStack = stackMap[techStack]
+    const selectedStack = stackMap[field]
     if (selectedStack) {
       setUserStack(selectedStack)
+      setTechs([])
+      const otherOpt = document.querySelector('.otherOpt')
+      if (otherOpt) otherOpt.innerHTML = '' // clear previous input if any
     }
-  }, [techStack])
+  }, [field])
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    const checked = e.target.checked
+    const { value, checked } = e.target
 
     setTechs(prev => {
       const updatedTechs = checked
         ? [...prev, value]
         : prev.filter((tech) => tech !== value)
 
-      // If 'Others' is in the list, show the input
       const otherOpt = document.querySelector('.otherOpt')
       if (updatedTechs.includes('Others')) {
         const existingInput = otherOpt?.querySelector('input')
@@ -68,13 +74,25 @@ const page = () => {
           otherOpt?.appendChild(newInput)
         }
       } else {
-        // otherOpt?.innerHTML = '' // remove extra input if 'Others' is unchecked
+        if (otherOpt) otherOpt.innerHTML = ''
       }
-
       return updatedTechs
     })
-  }
 
+  }
+  useEffect(() => {
+    setDevInfo({
+      devfield: field,
+      devStack: techs,
+      devExperience: experience
+    })
+  }, [field, techs, experience])
+
+  const nextStep = () => {
+    setLoading(true)
+    console.log(devInfo)
+    increaseProgress()
+  }
 
   return (
     <div className='pt-12 px-2 relative pb-8'>
@@ -90,7 +108,13 @@ const page = () => {
         <div className="devOpt">
           <div>
             <h2>What do you do?</h2>
-            <select name="devopt" value={techStack} onChange={changeTechStack} id="devOpt" className='border-[#3D3C99] border rounded w-[320px] py-2 px-1 bg-black'>
+            <select
+              name="devopt"
+              value={field}
+              onChange={changeTechStack}
+              id="devOpt"
+              className='border-[#3D3C99] border rounded w-[320px] py-2 px-1 bg-black'
+            >
               <option value="Fullstack developer">Fullstack developer</option>
               <option value="Backend developer">Backend developer</option>
               <option value="Frontend developer">Frontend developer</option>
@@ -105,7 +129,15 @@ const page = () => {
           <div className='grid grid-cols-2 w-[300px] mt-3'>
             {userStack.map((stack) => (
               <label key={stack}>
-                <input onChange={handleCheckboxChange} type="checkbox" name="tech" id="techstack" value={stack} className='mr-1.5 w-[15px] h-[15px]' />{stack}
+                <input
+                  onChange={handleCheckboxChange}
+                  type="checkbox"
+                  name="tech"
+                  id={`techstack-${stack}`}
+                  value={stack}
+                  checked={techs.includes(stack)}
+                  className='mr-1.5 w-[15px] h-[15px]'
+                />{stack}
               </label>
             ))}
           </div>

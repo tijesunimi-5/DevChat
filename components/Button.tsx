@@ -1,5 +1,5 @@
 'use client'
-import React, { CSSProperties, ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 type ButtonProps = {
     style?: string

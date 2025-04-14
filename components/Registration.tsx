@@ -1,30 +1,32 @@
 'use client'
-import React, { useRef, FormEvent, useEffect } from 'react'
+import React, { useRef, FormEvent, useEffect, useContext } from 'react'
 import Button from './Button'
 import Link from 'next/link';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Alert from './Alert';
+import { useUser } from './UserContext';
 
 const Registration = () => {
-  const [progress, setProgress] = React.useState<number>(25);
-  const [firstname, setFirstname] = React.useState<string>('')
-  const [lastname, setLastname] = React.useState<string>('')
+  const [progress, setProgress] = React.useState<number>(15);
+  const [fullname, setFullname] = React.useState<string>('')
   const [email, setEmail] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
   const [message, setMessage] = React.useState<string>('')
   const [loading, setLoading] = React.useState<boolean>(false)
   const router = useRouter()
+  const { user, setUser } = useUser()
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
-    if (!firstname || !lastname || !email || !password) {
+    if (!fullname || !email || !password) {
       console.log('empty')
       return
     }
 
-    console.log({ firstname, lastname, email, password })
+    const firstName = fullname.trim().split(' ')[0]
+    setUser({ fullname, email, password, firstName })
     increaseProgress()
     setMessage('Account created successfully...')
     setTimeout(() => {
@@ -49,16 +51,16 @@ const Registration = () => {
           <span className={`bg-[#3D3C99] absolute h-2 rounded-2xl`} style={{ width: `${progress}%` }}></span>
         </div>
         <div className="inputbox mt-2">
-          <input required type="text" onChange={(e) => setFirstname(e.target.value)} value={firstname} />
-          <span>Firstname</span>
+          <input required type="text" onChange={(e) => setFullname(e.target.value)} value={fullname} />
+          <span>Full name</span>
           <i></i>
         </div>
 
-        <div className="inputbox mt-5">
+        {/* <div className="inputbox mt-5">
           <input required type="text" onChange={(e) => setLastname(e.target.value)} value={lastname} />
           <span>Lastname</span>
           <i></i>
-        </div>
+        </div> */}
 
         <div className="inputbox mt-5">
           <input required type="email" onChange={(e) => setEmail(e.target.value)} value={email} />

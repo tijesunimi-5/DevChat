@@ -8,8 +8,8 @@ import { useUser } from './UserContext'
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false) //this state toggles the menu for mobile
-  const {user, signedIn} = useUser()
-  
+  const { user, signedIn } = useUser()
+
   return (
     <header className='flex px-3 py-1 fixed right-0 left-0 justify-between items-center border-b border-[#3D3CC9] z-50'>
       <div className="blur absolute left-0 right-0 bottom-0 top-0"></div>
@@ -20,11 +20,14 @@ const Header = () => {
       </div>
 
       {signedIn && (
-        <div className="icon text-2xl flex items-center md:hidden  z-10" onClick={() => setIsVisible(!isVisible)}>
-          {isVisible ? <FaTimes className='transition-all duration-300 ease-in-out' /> : <FaBars className='transition-all duration-300 ease-in-out' />}
-        </div>
+        <>
+          <div className="icon text-2xl flex items-center md:hidden  z-10" onClick={() => setIsVisible(!isVisible)}>
+            {isVisible ? <FaTimes className='transition-all duration-300 ease-in-out' /> : <FaBars className='transition-all duration-300 ease-in-out' />}
+          </div>
+          <MobileBar isVisible={isVisible} setVisible={setIsVisible} />
+
+        </>
       )}
-      <MobileBar isVisible={isVisible} setVisible={setIsVisible} />
     </header>
   )
 }

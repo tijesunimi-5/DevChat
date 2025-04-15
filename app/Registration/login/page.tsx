@@ -1,11 +1,12 @@
 'use client'
 import Button from '@/components/Button'
-import React, { FormEvent } from 'react'
+import React, { FormEvent, useState } from 'react'
 import Link from 'next/link'
 import { FaGithub, FaGoogle } from 'react-icons/fa'
 import Alert from '@/components/Alert'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@/components/UserContext'
+import { tree } from 'next/dist/build/templates/app-page'
 
 const page = () => {
   const [progress, setProgress] = React.useState<number>(50);
@@ -13,7 +14,8 @@ const page = () => {
   const [password, setPassword] = React.useState<string>('')
   const [message, setMessage] = React.useState<string>('')
   const [loading, setLoading] = React.useState<boolean>(false)
-  const { setUser, setSignedIn } = useUser()
+  const [alert, setAlert] = useState<boolean>(false)
+  const { setUser } = useUser()
   const router = useRouter()
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -27,28 +29,38 @@ const page = () => {
     const storedUser = localStorage.getItem('user')
     if (!storedUser) {
       setMessage('No registered user found!')
+      setAlert(true)
+      setTimeout(() => {
+        setAlert(false)
+      }, 1500)
       return
     }
     const parsedUser = JSON.parse(storedUser)
     if (email === parsedUser.email && password === parsedUser.password) {
+      setLoading(true)
       setUser(parsedUser)
-      setSignedIn(true)
       increaseProgress()
       setMessage('Sign In successful')
+      setAlert(true)
       setTimeout(() => {
         setLoading(false)
-      }, 5000)
+        setAlert(false)
+      }, 1000)
       setTimeout(() => {
         router.push('/Registration/profileSetup')
-      }, 6000)
+      }, 2000)
     } else {
       setMessage('Invalid email or password')
+      setAlert(true)
+      setTimeout(() => {
+        setLoading(false)
+        setAlert(false)
+      }, 1000)
     }
   }
 
   const increaseProgress = () => {
     setProgress(prev => Math.min(prev + 25, 100));
-    console.log(progress)
   }
 
   return (
@@ -75,10 +87,10 @@ const page = () => {
         <Link href={'/'} className='mt-3 text-gray-400'>Forgot Password?</Link>
 
         <Button types='submit' style={'bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20'}>
-          Sign In
+          {loading ? 'Logging in...' : "Sign In"}
         </Button>
 
-        <p className='mt-3 z-20'>Don't an account? <Link href={'/Registration'} className='cursor-pointer underline'>Sign Up</Link></p>
+        <p className='mt-3 z-20'>Don't have an account? <Link href={'/Registration'} className='cursor-pointer underline'>Sign Up</Link></p>
       </form>
 
       <h2 className='text-2xl font-bold text-center mt-7'>Or</h2>
@@ -88,7 +100,7 @@ const page = () => {
         <Button style='mt-4'><FaGithub className='mr-3' /> Sign up with Github </Button>
       </div>
 
-      {loading && (<Alert msg={message} />)}
+      {alert && (<Alert msg={message} />)}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #f5f5f5;
@@ -120,3 +120,37 @@ body {
   -webkit-backdrop-filter: blur(10px);
   z-index: 2;
 }
+
+.blur-effect {
+  background-color: rgba(61, 60, 153, 0.6);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.text-col {
+  color: #3d3cc9;
+}
+.circle {
+  transform: rotate(-90deg);
+}
+.circle-bg {
+  stroke: #3D3CC9;
+}
+.circle-progress {
+  stroke: #fefefefe;
+  transition: stroke-dashoffset 0.5s ease;
+}
+.percentage {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 10px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #3D3CC9;
+}
+.circle-container {
+  position: relative;
+}
+

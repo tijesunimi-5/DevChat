@@ -3,6 +3,9 @@ import Button from '@/components/Button'
 import React, { useEffect, useState } from 'react'
 import { FaTools } from 'react-icons/fa'
 import { techStacks, getTechStackForSpecialty } from '../../../techdata'
+import { useUser } from '@/components/UserContext'
+import Alert from '@/components/Alert'
+import { useRouter } from 'next/navigation'
 
 const page = () => {
   const [progress, setProgress] = React.useState<number>(75);
@@ -12,6 +15,8 @@ const page = () => {
   const [linkedInLink, setLinkedInLink] = React.useState<string>('')
   const [websiteLink, setWebsiteLink] = React.useState<string>('')
   const [field, setField] = useState('Fullstack developer')//this sets the field the developer is in
+  const [message, setMessage] = useState<string>('')
+  const [alert, setAlert] = useState<boolean>(false)
 
   const [loading, setLoading] = React.useState<boolean>(false)
   const [userStack, setUserStack] = React.useState<string[]>([]) // this store the technologies used for each fields
@@ -23,8 +28,8 @@ const page = () => {
     devExperience: experience
   }) //this store the whole details
 
-
-  
+  const { user, setSignedIn } = useUser()
+  const router = useRouter()
 
   const increaseProgress = () => {
     setProgress(prev => Math.min(prev + 25, 100))
@@ -89,9 +94,28 @@ const page = () => {
   }, [field, techs, experience])
 
   const nextStep = () => {
+    if (devInfo.devExperience === '' || devInfo.devStack.length === 0) {
+      setMessage('Select all fields!')
+      setAlert(true)
+      setTimeout(() => {
+        setAlert(false)
+      }, 2000)
+      return;
+    }
+
+    //if successful
+    setMessage(`55% Completed!`)
+    setAlert(true)
+    setTimeout(() => {
+      setAlert(true)
+    }, 2000)
+    setSignedIn(true)
     setLoading(true)
-    console.log(devInfo)
+    setTimeout(() => {
+      setLoading(false)
+    }, 2000)
     increaseProgress()
+    router.push('/home')
   }
 
   return (
@@ -112,7 +136,7 @@ const page = () => {
               name="devopt"
               value={field}
               onChange={changeTechStack}
-              id="devOpt"
+              id="devOpt" required
               className='border-[#3D3C99] border rounded w-[320px] py-2 px-1 bg-black'
             >
               <option value="Fullstack developer">Fullstack developer</option>
@@ -187,10 +211,11 @@ const page = () => {
 
           </div> */}
           <Button onclick={nextStep} style='mt-5 w-[200px] ml-12'>
-            Next Step
+            {loading ? 'Setting up...' : 'Set Up'}
           </Button>
         </div>
       </div>
+      {alert ? <Alert msg={message} /> : ''}
     </div>
   )
 }

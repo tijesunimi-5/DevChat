@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, FormEvent, useEffect, useContext } from 'react'
+import React, { useRef, FormEvent, useEffect, useContext, useState } from 'react'
 import Button from './Button'
 import Link from 'next/link';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
@@ -14,6 +14,7 @@ const Registration = () => {
   const [password, setPassword] = React.useState<string>('')
   const [message, setMessage] = React.useState<string>('')
   const [loading, setLoading] = React.useState<boolean>(false)
+  const [alert, setAlert] = useState<boolean>(false)
   const router = useRouter()
   const { user, setUser } = useUser()
 
@@ -21,7 +22,11 @@ const Registration = () => {
     e.preventDefault()
     setLoading(true)
     if (!fullname || !email || !password) {
-      console.log('empty')
+      setMessage('Please fill out the fields!')
+      setAlert(true)
+      setTimeout(() => {
+        setAlert(false)
+      }, 1500)
       return
     }
 
@@ -29,12 +34,14 @@ const Registration = () => {
     setUser({ fullname, email, password, firstName })
     increaseProgress()
     setMessage('Account created successfully...')
+    setAlert(true)
     setTimeout(() => {
       setLoading(false);
-    }, 5000)
+      setAlert(false)
+    }, 2000)
     setTimeout(() => {
       router.push('/Registration/login')
-    }, 6000)
+    }, 3000)
   }
 
   const increaseProgress = () => {
@@ -56,12 +63,6 @@ const Registration = () => {
           <i></i>
         </div>
 
-        {/* <div className="inputbox mt-5">
-          <input required type="text" onChange={(e) => setLastname(e.target.value)} value={lastname} />
-          <span>Lastname</span>
-          <i></i>
-        </div> */}
-
         <div className="inputbox mt-5">
           <input required type="email" onChange={(e) => setEmail(e.target.value)} value={email} />
           <span>Email</span>
@@ -75,7 +76,7 @@ const Registration = () => {
         </div>
 
         <Button types='submit' style={'bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20'}>
-          Sign Up
+          {loading ? 'Creating...' : 'Sign Up'}
         </Button>
 
         <p className='mt-3 z-20'>Have an account already? <Link href={'/Registration/login'} className='cursor-pointer underline'>Sign In</Link></p>
@@ -88,7 +89,7 @@ const Registration = () => {
         <Button style='mt-2'><FaGithub className='mr-3' /> Sign up with Github </Button>
       </div>
 
-      {loading && (<Alert msg={message} />)}
+      {alert && (<Alert msg={message} />)}
     </div>
   )
 }

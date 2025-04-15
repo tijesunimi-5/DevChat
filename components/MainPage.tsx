@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { useUser } from './UserContext'
 import CircularProgress from './CircularProgress'
+import Link from 'next/link'
 
 const MainPage: React.FC = () => {
   const { user } = useUser()
@@ -18,7 +19,7 @@ const MainPage: React.FC = () => {
       <div className="welcome text-xl mt-5 font-bold">Welcome, {firstname} 👋</div>
       <div className='mt-5 px-2 py-3 rounded regShad flex justify-between'>
         <div className='flex flex-col'>
-          <p>You're {percentage}% set for your model</p>
+          <p className='text-[18px]'>You're {percentage}% set for your model</p>
 
           <div className="next-step text-gray-400">
             Your next step: <br />
@@ -72,6 +73,20 @@ const MainPage: React.FC = () => {
           <h1 className='text-3xl font-bold text-center mb-3'>Anayltics</h1>
           <CircularProgress percentage={0} />
         </div>
+      </div>
+
+      <div className="info mt-10">
+        <h1 className='text-3xl font-bold text-[#3D3CC9] mb-2'>Overview</h1>
+        <p className='leading-normal text-[18px]'>DevChat is an AI-powered chatbot platform designed to help developers revolutionalize their portfolio. With DevChat, you can easily crete and train a chatbot to engage with recruiters, answer common questions, and showcase your skills and projects - all from one platform.</p>
+
+        <h2 className='mt-5 text-[#3D3CC9] font-semibold text-[26px] mb-2'>Key features</h2>
+        <ul className='list-disc ml-4 leading-relaxed text-[18px]'>
+          <li>Easily set up your chatbot.</li>
+          <li>Train your model with your specific content.</li>
+          <li>Improve your chances of standing out to potential employers with a smart responsive chatbot.</li>
+        </ul>
+
+        <p className='mt-4 pb-4 text-[18px]'>For a step-by-step guide and detailed instructions, visit out <Link href={'/documentation'} className='underline text-[#3D3CC9]'>Documentation</Link></p>
       </div>
     </div>
   )

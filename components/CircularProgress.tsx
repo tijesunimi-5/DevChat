@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react'
 
 interface CircularProgressProps {
   percentage: number;
+  delay?: number
 }
 
-const CircularProgress: React.FC<CircularProgressProps> = ({ percentage }) => {
+const CircularProgress: React.FC<CircularProgressProps> = ({ percentage, delay = 0 }) => {
   const [progess, setProgress] = useState<number>(0)
 
   //to animate the progress from 0 to given end point
@@ -24,7 +25,21 @@ const CircularProgress: React.FC<CircularProgressProps> = ({ percentage }) => {
       }
     };
 
-    requestAnimationFrame(animate);
+    const delayFunc = () =>{
+      setTimeout(() => {
+        requestAnimationFrame(animate)
+      }, delay)
+    }
+
+    if (delay === 0) {
+      requestAnimationFrame(animate);
+    } else {
+      delayFunc()
+    }
+    
+    return () => {
+      setProgress(0)
+    }
   }, [percentage]);
 
 

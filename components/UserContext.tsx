@@ -14,7 +14,11 @@ interface UserContextProps {
   user: User;
   setUser: (user: User) => void;
   signedIn: boolean;
-  setSignedIn: (status: boolean) => void
+  setSignedIn: (status: boolean) => void;
+  progress: number;
+  setProgress: (value: number) => void;
+  linkUploadProgess: number;
+  setLinkUploadProgress: (value: number) => void;
 }
 
 // This creates the context
@@ -48,17 +52,32 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     return false
   })
 
+  const [progress, setProgress] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      const storedProgress = localStorage.getItem('progress');
+      return storedProgress ? parseInt(storedProgress) : 0
+    }
+    return 0
+  })
+
+  const [linkUploadProgess, setLinkUploadProgress] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      const storedProgress = localStorage.getItem('linkProgress')
+      return storedProgress ? parseInt(storedProgress) : 0
+    }
+    return 0
+  })
+
   //This saves user's data to localstorage when updated
   useEffect(() => {
     localStorage.setItem('user', JSON.stringify(user))
-  }, [user])
-
-  useEffect(() => {
+    localStorage.setItem('progess', progress.toString())
     localStorage.setItem('signedIn', signedIn.toString())
-  }, [signedIn])
+  }, [progress, linkUploadProgess, signedIn, user])
+  
 
   return (
-    <UserContext.Provider value={{ user, setUser, signedIn, setSignedIn }}>
+    <UserContext.Provider value={{ user, setUser, signedIn, setSignedIn, progress, setProgress, linkUploadProgess, setLinkUploadProgress }}>
       {children}
     </UserContext.Provider>
   );

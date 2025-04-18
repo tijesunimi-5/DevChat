@@ -8,7 +8,6 @@ import Alert from '@/components/Alert'
 import { useRouter } from 'next/navigation'
 
 const page = () => {
-  const [progress, setProgress] = React.useState<number>(75);
   const [experience, setExperience] = React.useState<number | string>('')
   const [githubLink, setGithubLink] = React.useState<string>('')
   const [twitterLink, setTwitterLink] = React.useState<string>('')
@@ -28,11 +27,11 @@ const page = () => {
     devExperience: experience
   }) //this store the whole details
 
-  const { user, setSignedIn } = useUser()
+  const { user, setSignedIn, progress, setProgress } = useUser()
   const router = useRouter()
 
   const increaseProgress = () => {
-    setProgress(prev => Math.min(prev + 25, 100))
+    // setProgress(prev => Math.min(prev + 25, 100)); 
   }
 
   const changeTechStack = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -104,7 +103,7 @@ const page = () => {
     }
 
     //if successful
-    setMessage(`55% Completed!`)
+    setMessage(`50% Completed!`)
     setAlert(true)
     setTimeout(() => {
       setAlert(true)
@@ -172,7 +171,7 @@ const page = () => {
             <input
               type='text'
               required
-              className='border-[#3D3C99] border w-[320px] mt-2 rounded py-1 px-1'
+              className='border-[#3D3C99] border w-[320px] mt-2 rounded py-1 px-1 outline-none'
               onChange={(e) => setExperience(e.target.value)}
               value={experience}
             />

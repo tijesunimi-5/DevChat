@@ -17,8 +17,10 @@ interface UserContextProps {
   setSignedIn: (status: boolean) => void;
   progress: number;
   setProgress: (value: number) => void;
-  linkUploadProgess: number;
+  linkUploadProgress: number;
   setLinkUploadProgress: (value: number) => void;
+  QnAProgress: number;
+  setQnAProgress: (value: number) => void;
 }
 
 // This creates the context
@@ -60,9 +62,17 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     return 0
   })
 
-  const [linkUploadProgess, setLinkUploadProgress] = useState<number>(() => {
+  const [linkUploadProgress, setLinkUploadProgress] = useState<number>(() => {
     if (typeof window !== 'undefined') {
       const storedProgress = localStorage.getItem('linkProgress')
+      return storedProgress && !isNaN(Number(storedProgress)) ? parseInt(storedProgress) : 0;
+    }
+    return 0
+  })
+
+  const [QnAProgress, setQnAProgress] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      const storedProgress = localStorage.getItem('QnAProgress')
       return storedProgress ? parseInt(storedProgress) : 0
     }
     return 0
@@ -70,14 +80,17 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   //This saves user's data to localstorage when updated
   useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(user))
-    localStorage.setItem('progess', progress.toString())
-    localStorage.setItem('signedIn', signedIn.toString())
-  }, [progress, linkUploadProgess, signedIn, user])
-  
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('progess', progress.toString())
+      localStorage.setItem('linkProgress', linkUploadProgress.toString())
+      localStorage.setItem('signedIn', signedIn.toString())
+      localStorage.setItem('QnAProgress', QnAProgress.toString())
+    }
+  }, [progress, linkUploadProgress, signedIn, user, QnAProgress])
 
   return (
-    <UserContext.Provider value={{ user, setUser, signedIn, setSignedIn, progress, setProgress, linkUploadProgess, setLinkUploadProgress }}>
+    <UserContext.Provider value={{ user, setUser, signedIn, setSignedIn, progress, setProgress, linkUploadProgress, setLinkUploadProgress, QnAProgress, setQnAProgress }}>
       {children}
     </UserContext.Provider>
   );

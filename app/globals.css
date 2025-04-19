@@ -157,3 +157,6 @@ body {
 .tip {
   color: #99a1af;
 }
+input {
+  outline: none;
+}

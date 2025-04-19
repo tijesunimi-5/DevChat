@@ -8,17 +8,34 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const MainPage: React.FC = () => {
-  const { user, progress, setProgress, signedIn, linkUploadProgess } = useUser()
+  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress } = useUser()
   const [registerProgress, setRegisterProgress] = useState<number>(0)
   const [techStackProgress, setTechStackProgress] = useState<number>(0)
   const [bQAProgress, setBQProgress] = useState<number>(0)//for basic QnA
-  const capitalLetter = (firstname?: string) => {
-    if (firstname && firstname[0] === firstname[0].toLowerCase()) {
-      return firstname.charAt(0).toUpperCase() + firstname.slice(1)
+
+
+  // const capitalizeFullnameFirstLetters = (name?: string) => {
+  //   if (name) {
+  //     return name
+  //       .split(' ') // Split the name by spaces
+  //       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+  //       .join(' '); // Join the words back together with a space
+  //   }
+  //   return '';
+  // };
+
+  // const fullname = capitalizeFullnameFirstLetters(user.fullname);
+
+  const capitalizeFirstName = (name?: string) => {
+    if (name) {
+      const firstName = name.split(' ')[0]; // Get the first name
+      return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(); // Capitalize the first letter of the first name
     }
-  }
-  const firstname = capitalLetter(user.firstName)
-  console.log(linkUploadProgess)
+    return '';
+  };
+
+  const firstname = capitalizeFirstName(user.fullname);
+
 
   useEffect(() => {
     if (window.innerWidth <= 375) {
@@ -114,15 +131,31 @@ const MainPage: React.FC = () => {
         <div className='flex mt-8'>
           <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl relative pb-6 scale3">
             <h2 className='text-[18px] pt-2 text-center'>Upload your links...</h2>
-            <CircularProgress percentage={linkUploadProgess} />
-            <p className='text-[#3D3CC9] underline absolute bottom-1 left-2'>complete now</p>
+            <CircularProgress percentage={linkUploadProgress} />
+            {linkUploadProgress < 100
+              ? (
+                <Link href={'/trainer'} className='text-col underline absolute bottom-1 left-2'>
+                  complete now
+                </Link>
+              ) : (
+                <p className='text-col absolute bottom-1 left-2'>
+                  Completed
+                </p>)}
             <p className='absolute bottom-0.5 right-2 text-gray-400'>10%</p>
           </div>
 
           <div className="creation flex flex-col regShad justify-center items-center w-[400px] ml-5 rounded-xl relative pb-6 scale4">
             <h2 className='pt-2 text-[18px]'>Basic QnA</h2>
-            <CircularProgress percentage={0} />
-            <p className='text-[#3D3CC9] underline absolute bottom-1 left-2'>complete now</p>
+            <CircularProgress percentage={QnAProgress} />
+            {QnAProgress < 100
+              ? (
+                <Link href={'/trainer'} className='text-col underline absolute bottom-1 left-2'>
+                  complete now
+                </Link>
+              ) : (
+                <p className='text-col absolute bottom-1 left-2'>
+                  Completed
+                </p>)}
             <p className='absolute bottom-0.5 right-2 text-gray-400'>20%</p>
           </div>
         </div>
@@ -130,7 +163,7 @@ const MainPage: React.FC = () => {
         <div className="creation flex flex-col regShad justify-center items-center w-[300px] mt-8 ml-5 rounded-xl relative pb-6 scroll scale-[0.7]">
           <h2 className='pt-2 text-[18px]'>Train the chatbot model</h2>
           <CircularProgress percentage={10} />
-          <p className='text-[#3D3CC9] underline absolute bottom-1 left-2'>complete now</p>
+          <p className='text-col underline absolute bottom-1 left-2'>complete now</p>
           <p className='absolute bottom-0.5 right-2 text-gray-400'>50%</p>
         </div>
 

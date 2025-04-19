@@ -6,16 +6,22 @@ import { useUser } from './UserContext'
 import { FaCog, FaFile, FaFlask, FaHome, FaLink, FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa'
 import { FaMessage } from 'react-icons/fa6'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
   const [active, setActive] = useState<null | number>(null)
-  const { user, signedIn } = useUser()
-  const capitalLetter = (firstname?: string) => {
-    if (firstname && firstname[0] === firstname[0].toLowerCase()) {
-      return firstname.charAt(0).toUpperCase() + firstname.slice(1)
+  const { user, signedIn, setUser, setSignedIn, setProgress } = useUser()
+  const capitalizeFirstName = (name?: string) => {
+    if (name) {
+      const firstName = name.split(' ')[0]; // Get the first name
+      return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase(); // Capitalize the first letter of the first name
     }
-  }
-  const firstname = capitalLetter(user.firstName)
+    return '';
+  };
+
+  const firstname = capitalizeFirstName(user.fullname);
+
+  const router = useRouter()
 
   const handleClick = (index: number) => {
     setActive(index)
@@ -32,6 +38,15 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
       })
     }
   })
+
+  const logout = () => {
+    if(signedIn) {
+      setUser({ fullname: '', email: '', password: '', firstName: '' })
+      setSignedIn(false)
+      setProgress(0)
+      router.push('/Registration')
+    }
+  }
 
   return (
     <div className={`mobile-bar w-[300px] h-screen px-2 shadow md:hidden border-r-2 border-[#3D3CC9] absolute top-0 bottom-0 left-0 ${isVisible ? 'block' : 'ml-[-300px]'} mt-10 overflow-hidden`}>
@@ -82,7 +97,7 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
           <FaCog className='text-col mr-3 text-[28px] mb-1.5' /> Settings
         </span>
 
-        <Button style='absolute bottom-20 w-[280px] text-[20px]'>{signedIn ? (<> Sign Out <FaSignOutAlt className='ml-3' />  </>) : (<><FaSignInAlt className='ml-3' /> Sign In</>)}</Button>
+        <Button style='absolute bottom-20 w-[280px] text-[20px]' onclick={logout}>{signedIn ? (<> Sign Out <FaSignOutAlt className='ml-3' />  </>) : (<><FaSignInAlt className='ml-3' /> Sign In</>)}</Button>
       </div>
     </div>
   )

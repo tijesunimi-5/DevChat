@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -6,6 +5,8 @@ import Header from "@/components/Header";
 import MobileBar from "@/components/MobileBar";
 import React from "react";
 import { UserProvider } from "@/components/UserContext";
+import { SessionProvider } from "next-auth/react";
+import ClientProviders from "@/components/ClientProviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,10 +34,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         {/* <MobileBar /> */}
-        <UserProvider>
-          <Header />
+        <ClientProviders>
           {children}
-        </UserProvider>
+        </ClientProviders>
       </body>
     </html>
   );

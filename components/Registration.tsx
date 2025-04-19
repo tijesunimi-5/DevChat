@@ -6,6 +6,8 @@ import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import Alert from './Alert';
 import { useUser } from './UserContext';
+import { signIn } from 'next-auth/react';
+
 
 const Registration = () => {
   const [progress, setProgress] = React.useState<number>(15);
@@ -17,6 +19,8 @@ const Registration = () => {
   const [alert, setAlert] = useState<boolean>(false)
   const router = useRouter()
   const { user, setUser } = useUser()
+
+
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -85,8 +89,14 @@ const Registration = () => {
       <h2 className='text-2xl font-bold text-center mt-3'>Or</h2>
 
       <div className="optional mt-2 ml-16">
-        <Button><FaGoogle className='mr-2' /> Sign up with Google</Button>
-        <Button style='mt-2'><FaGithub className='mr-3' /> Sign up with Github </Button>
+        <Button onclick={() => signIn('google', { callbackUrl: '/Registration/profileSetup' })}>
+          <FaGoogle className='mr-2' />
+          Sign up with Google
+        </Button>
+        <Button style='mt-2' onclick={() => signIn('github', { callbackUrl: '/Registration/profileSetup' })}>
+          <FaGithub className='mr-3' />
+          Sign up with Github
+        </Button>
       </div>
 
       {alert && (<Alert msg={message} />)}

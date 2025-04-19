@@ -7,6 +7,7 @@ import Alert from '@/components/Alert'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@/components/UserContext'
 import { tree } from 'next/dist/build/templates/app-page'
+import { signIn } from 'next-auth/react'
 
 const page = () => {
   const [progress, setProgress] = React.useState<number>(50);
@@ -96,8 +97,14 @@ const page = () => {
       <h2 className='text-2xl font-bold text-center mt-7'>Or</h2>
 
       <div className="optional mt-5 ml-16">
-        <Button><FaGoogle className='mr-2' /> Sign up with Google</Button>
-        <Button style='mt-4'><FaGithub className='mr-3' /> Sign up with Github </Button>
+        <Button onclick={() => signIn('google', { callbackUrl: '/Registration/profileSetup' })}>
+          <FaGoogle className='mr-2' />
+          Sign up with Google
+        </Button>
+        <Button style='mt-4' onclick={() => signIn('github', { callbackUrl: '/Registration/profileSetup' })}>
+          <FaGithub className='mr-3' />
+          Sign up with Github
+        </Button>
       </div>
 
       {alert && (<Alert msg={message} />)}

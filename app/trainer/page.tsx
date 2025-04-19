@@ -4,17 +4,25 @@ import { useUser } from '@/components/UserContext'
 import React, { useState } from 'react'
 
 const page = () => {
-  const { user } = useUser()
+  const { user, setLinkUploadProgress, setQnAProgress } = useUser()
   const [edit, setEdit] = useState<number | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
   const [fileName, setFile] = useState<string>('')
-  const capitalLetter = (firstname?: string) => {
-    if (firstname && firstname[0] === firstname[0].toLowerCase()) {
-      return firstname.charAt(0).toUpperCase() + firstname.slice(1)
+
+  const [portfolioLink, setPortfolioLink] = useState<string>('')
+  const [portfolioInfo, setPortfolioInfo] = useState<string>('')
+  const capitalizeFullnameFirstLetters = (name?: string) => {
+    if (name) {
+      return name
+        .split(' ') // Split the name by spaces
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+        .join(' '); // Join the words back together with a space
     }
-  }
-  const fullname = capitalLetter(user.fullname)
+    return '';
+  };
+
+  const fullname = capitalizeFullnameFirstLetters(user.fullname);
 
   //to toggle edit button
   const editBtn = (index: number) => {
@@ -28,6 +36,11 @@ const page = () => {
 
   const save = () => {
     setLoading(true)
+    if (!portfolioInfo || !portfolioLink) {
+      return
+    }
+
+    setLinkUploadProgress(100)
 
     setTimeout(() => {
       setLoading(false)
@@ -97,10 +110,10 @@ const page = () => {
               <p className="plink">
                 Drop your portfolio link
               </p>
-              <input type='text' placeholder='link' className='border-white border w-[325px] rounded py-1 px-1 mt-2' />
+              <input type='text' placeholder='link' className='border-white border w-[325px] rounded py-1 px-1 mt-2 outline-none' value={portfolioLink} onChange={(e) => setPortfolioLink(e.target.value)} />
 
-              <textarea name="info" placeholder='enter details about portfolio here' className='resize-none h-[120px] mt-2 rounded w-[325px] border outline-none px-2'></textarea>
-              <Button style='h-[30px]'>Save</Button>
+              <textarea name="info" placeholder='enter details about portfolio here' className='resize-none h-[120px] mt-2 rounded w-[325px] border outline-none px-2' value={portfolioInfo} onChange={(e) => setPortfolioInfo(e.target.value)}></textarea>
+              <Button style='h-[30px]' onclick={save}>Save</Button>
             </div>
           </div>
 

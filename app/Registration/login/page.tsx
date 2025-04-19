@@ -1,6 +1,6 @@
 'use client'
 import Button from '@/components/Button'
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FaGithub, FaGoogle } from 'react-icons/fa'
 import Alert from '@/components/Alert'
@@ -16,7 +16,7 @@ const page = () => {
   const [message, setMessage] = React.useState<string>('')
   const [loading, setLoading] = React.useState<boolean>(false)
   const [alert, setAlert] = useState<boolean>(false)
-  const { setUser } = useUser()
+  const { setUser , setSignedIn } = useUser()
   const router = useRouter()
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -59,6 +59,9 @@ const page = () => {
       }, 1000)
     }
   }
+  useEffect(() => {
+    setSignedIn(false)
+  })
 
   const increaseProgress = () => {
     setProgress(prev => Math.min(prev + 25, 100));

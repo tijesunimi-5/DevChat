@@ -97,7 +97,7 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
           <FaCog className='text-col mr-3 text-[28px] mb-1.5' /> Settings
         </span>
 
-        <Button style='absolute bottom-20 w-[280px] text-[20px]' onclick={logout}>{signedIn ? (<> Sign Out <FaSignOutAlt className='ml-3' />  </>) : (<><FaSignInAlt className='ml-3' /> Sign In</>)}</Button>
+        <Button style='absolute bottom-20 w-[280px] text-[20px]' onclick={() => { logout; setTimeout(() => { setVisible(false) }, 200) }}>{signedIn ? (<> Sign Out <FaSignOutAlt className='ml-3' />  </>) : (<><FaSignInAlt className='ml-3' /> Sign In</>)}</Button>
       </div>
     </div>
   )

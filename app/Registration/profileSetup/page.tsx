@@ -30,6 +30,10 @@ const page = () => {
   const { user, setSignedIn, progress, setProgress } = useUser()
   const router = useRouter()
 
+  useEffect(() => {
+    setSignedIn(false)
+  })
+
   const increaseProgress = () => {
     // setProgress(prev => Math.min(prev + 25, 100)); 
   }
@@ -103,7 +107,7 @@ const page = () => {
     }
 
     //if successful
-    setMessage(`50% Completed!`)
+    setMessage(`20% Completed!`)
     setAlert(true)
     setTimeout(() => {
       setAlert(true)

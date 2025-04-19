@@ -8,7 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const MainPage: React.FC = () => {
-  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress } = useUser()
+  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress,setSignedIn } = useUser()
   const [registerProgress, setRegisterProgress] = useState<number>(0)
   const [techStackProgress, setTechStackProgress] = useState<number>(0)
   const [bQAProgress, setBQProgress] = useState<number>(0)//for basic QnA
@@ -25,6 +25,9 @@ const MainPage: React.FC = () => {
   // };
 
   // const fullname = capitalizeFullnameFirstLetters(user.fullname);
+  useEffect(() => { 
+    setSignedIn(true)
+  })
 
   const capitalizeFirstName = (name?: string) => {
     if (name) {

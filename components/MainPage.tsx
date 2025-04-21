@@ -5,30 +5,18 @@ import CircularProgress from './CircularProgress'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useRouter } from 'next/navigation'
+import Registration from './Registration'
 gsap.registerPlugin(ScrollTrigger)
 
 const MainPage: React.FC = () => {
-  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress,setSignedIn } = useUser()
+  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress, setSignedIn } = useUser()
   const [registerProgress, setRegisterProgress] = useState<number>(0)
   const [techStackProgress, setTechStackProgress] = useState<number>(0)
   const [bQAProgress, setBQProgress] = useState<number>(0)//for basic QnA
+  const router = useRouter()
 
-
-  // const capitalizeFullnameFirstLetters = (name?: string) => {
-  //   if (name) {
-  //     return name
-  //       .split(' ') // Split the name by spaces
-  //       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
-  //       .join(' '); // Join the words back together with a space
-  //   }
-  //   return '';
-  // };
-
-  // const fullname = capitalizeFullnameFirstLetters(user.fullname);
-  useEffect(() => { 
-    setSignedIn(true)
-  })
-
+  //this function is for setting user's first character to capital letter
   const capitalizeFirstName = (name?: string) => {
     if (name) {
       const firstName = name.split(' ')[0]; // Get the first name
@@ -36,11 +24,11 @@ const MainPage: React.FC = () => {
     }
     return '';
   };
-
   const firstname = capitalizeFirstName(user.fullname);
 
 
   useEffect(() => {
+    //mobile gsap
     if (window.innerWidth <= 375) {
       gsap.to('.cover',
         { width: 0, duration: 5 }
@@ -87,15 +75,27 @@ const MainPage: React.FC = () => {
       )
     }
 
+    //this checks if user has gone through the basic process and display the page
     if (user && signedIn) {
       setRegisterProgress(100)
       setTechStackProgress(100)
       setProgress(20)
     }
-  }, [user, signedIn])
 
+    //this checks if the user has provided link to portfolio
+    if (
+      typeof linkUploadProgress === 'number' &&
+      typeof progress === 'number' &&
+      linkUploadProgress === 100 &&
+      progress < 30
+    ) {
+      setProgress((prev) => prev + 10);
+    }
 
+  }, [user, signedIn, linkUploadProgress])
 
+  //this checks if user is signed in if not redirects to registration page
+  if (!signedIn) return <Registration />
   return (
     <div className='pt-10 px-3'>
       <div className="welcome text-xl mt-5 font-bold relative">

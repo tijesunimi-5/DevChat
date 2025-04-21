@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FaMessage } from 'react-icons/fa6'
 
 const Loader = () => {
+  //this is the text that is displayed when loading...
   const text: string[] = [
     'Unlock the power of AI: Elevate your portfolio with intelligent chatbots.',
     'Effortlessly showcase your expertise with AI-Powered chatbots.',
@@ -14,6 +15,7 @@ const Loader = () => {
   const textDisplayRef = useRef<HTMLDivElement>(null)
   let index: number = 0
 
+  //this setts the time for each texts
   useEffect(() => {
     const interval = setInterval(() => {
       setOpacity(false)

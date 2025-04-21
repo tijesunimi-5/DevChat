@@ -21,18 +21,9 @@ const page = () => {
   const [userStack, setUserStack] = React.useState<string[]>([]) // this store the technologies used for each fields
 
   const [techs, setTechs] = useState<string[]>([])//this store the technologies selected by the user
-  const [devInfo, setDevInfo] = useState({
-    devfield: field,
-    devStack: userStack,
-    devExperience: experience
-  }) //this store the whole details
 
-  const { user, setSignedIn, progress, setProgress } = useUser()
+  const { user, setSignedIn, progress, setProgress, devInfo, setDevInfo } = useUser()
   const router = useRouter()
-
-  useEffect(() => {
-    setSignedIn(false)
-  })
 
   const increaseProgress = () => {
     // setProgress(prev => Math.min(prev + 25, 100)); 
@@ -90,14 +81,15 @@ const page = () => {
   }
   useEffect(() => {
     setDevInfo({
-      devfield: field,
-      devStack: techs,
-      devExperience: experience
+      DevField: field,
+      DevExperience: experience,
+      DevStack: techs
     })
   }, [field, techs, experience])
 
   const nextStep = () => {
-    if (devInfo.devExperience === '' || devInfo.devStack.length === 0) {
+    //to check if fields are not filled
+    if (devInfo.DevExperience === '' || devInfo.DevStack?.length === 0) {
       setMessage('Select all fields!')
       setAlert(true)
       setTimeout(() => {

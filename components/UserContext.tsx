@@ -1,32 +1,35 @@
 'use client'
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-//This defines the structure of the user data
 interface User {
-  fullname: string;
-  email: string;
-  password: string;
-  firstName?: string
+  fullname?: string;
+  email?: string;
+  password?: string;
+  firstName?: string;
 }
 
-//This defines the context's shape
+interface DevInfo {
+  DevField?: string;
+  DevStack?: string[];
+  DevExperience?: number | string;
+}
+
 interface UserContextProps {
   user: User;
   setUser: (user: User) => void;
+  devInfo: DevInfo;
+  setDevInfo: React.Dispatch<React.SetStateAction<DevInfo>>;
   signedIn: boolean;
   setSignedIn: (status: boolean) => void;
   progress: number;
-  setProgress: (value: number) => void;
+  setProgress: React.Dispatch<React.SetStateAction<number>>;
   linkUploadProgress: number;
-  setLinkUploadProgress: (value: number) => void;
+  setLinkUploadProgress: React.Dispatch<React.SetStateAction<number>>;
   QnAProgress: number;
-  setQnAProgress: (value: number) => void;
-}
+  setQnAProgress: React.Dispatch<React.SetStateAction<number>>; }
 
-// This creates the context
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
-//Easy custom hook for using context
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
@@ -35,62 +38,43 @@ export const useUser = () => {
   return context;
 };
 
-//The provider that wraps the app app
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User>(() => {
-    if (typeof window !== 'undefined') {
-      const storedUser = localStorage.getItem('user');
-      return storedUser ? JSON.parse(storedUser) : { fullname: '', email: '', password: '' }
-    }
+  const [user, setUser] = useState<User>({ fullname: '', email: '', password: '' });
+  const [devInfo, setDevInfo] = useState<DevInfo>({ DevField: '', DevExperience: 0, DevStack: [] });
+  const [signedIn, setSignedIn] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [linkUploadProgress, setLinkUploadProgress] = useState<number>(0);
+  const [QnAProgress, setQnAProgress] = useState<number>(0);
 
-    return { fullname: '', email: '', password: '' }
-  });
-
-  const [signedIn, setSignedIn] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const storedStatus = localStorage.getItem('sigedIn')
-      return storedStatus === 'true'
-    }
-    return false
-  })
-
-  const [progress, setProgress] = useState<number>(() => {
-    if (typeof window !== 'undefined') {
-      const storedProgress = localStorage.getItem('progress');
-      return storedProgress ? parseInt(storedProgress) : 0
-    }
-    return 0
-  })
-
-  const [linkUploadProgress, setLinkUploadProgress] = useState<number>(() => {
-    if (typeof window !== 'undefined') {
-      const storedProgress = localStorage.getItem('linkProgress')
-      return storedProgress && !isNaN(Number(storedProgress)) ? parseInt(storedProgress) : 0;
-    }
-    return 0
-  })
-
-  const [QnAProgress, setQnAProgress] = useState<number>(() => {
-    if (typeof window !== 'undefined') {
-      const storedProgress = localStorage.getItem('QnAProgress')
-      return storedProgress ? parseInt(storedProgress) : 0
-    }
-    return 0
-  })
-
-  //This saves user's data to localstorage when updated
+  // Hydrate all states from localStorage once client-side
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('user', JSON.stringify(user))
-      localStorage.setItem('progess', progress.toString())
-      localStorage.setItem('linkProgress', linkUploadProgress.toString())
-      localStorage.setItem('signedIn', signedIn.toString())
-      localStorage.setItem('QnAProgress', QnAProgress.toString())
-    }
-  }, [progress, linkUploadProgress, signedIn, user, QnAProgress])
+    const storedUser = localStorage.getItem('user');
+    const storedDevInfo = localStorage.getItem('devInfo');
+    const storedSignedIn = localStorage.getItem('signedIn');
+    const storedProgress = localStorage.getItem('progress');
+    const storedLinkProgress = localStorage.getItem('linkProgress');
+    const storedQnA = localStorage.getItem('QnAProgress');
+
+    if (storedUser) setUser(JSON.parse(storedUser) || {});
+    if (storedDevInfo) setDevInfo(JSON.parse(storedDevInfo) || {});
+    if (storedSignedIn) setSignedIn(storedSignedIn === 'true');
+    if (storedProgress) setProgress(parseInt(storedProgress, 10));
+    if (storedLinkProgress) setLinkUploadProgress(parseInt(storedLinkProgress, 10));
+    if (storedQnA) setQnAProgress(parseInt(storedQnA, 10));
+  }, []);
+
+
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('devInfo', JSON.stringify(devInfo));
+    localStorage.setItem('signedIn', signedIn.toString());
+    localStorage.setItem('progress', progress.toString());
+    localStorage.setItem('linkProgress', linkUploadProgress.toString());
+    localStorage.setItem('QnAProgress', QnAProgress.toString());
+  }, [user, devInfo, signedIn, progress, linkUploadProgress, QnAProgress]);
 
   return (
-    <UserContext.Provider value={{ user, setUser, signedIn, setSignedIn, progress, setProgress, linkUploadProgress, setLinkUploadProgress, QnAProgress, setQnAProgress }}>
+    <UserContext.Provider value={{ user, setUser, devInfo, setDevInfo, signedIn, setSignedIn, progress, setProgress, linkUploadProgress, setLinkUploadProgress, QnAProgress, setQnAProgress }}>
       {children}
     </UserContext.Provider>
   );

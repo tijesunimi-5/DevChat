@@ -8,8 +8,32 @@ import { useUser } from "@/components/UserContext";
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true)
-  const { signedIn } = useUser()
+  const { signedIn, setUser } = useUser()
   const router = useRouter()
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user')
+      const storedSignIn = localStorage.getItem('signedIn')
+
+      if (storedUser && storedSignIn === 'true') {
+        const user = JSON.parse(storedUser)
+        console.log("User from localStorage:", user);
+
+        setUser({
+          fullname: user.name || '',
+          email: user.email || '',
+          password: user.password || '',
+        })
+      } else {
+        setUser({
+          fullname: '',
+          email: '',
+          password: ''
+        })
+      }
+    }
+  }, [setUser])
 
   useEffect(() => {
     const timer = setTimeout(() => { setLoading(false) }, 10000)
@@ -31,13 +55,13 @@ export default function Home() {
     // }
   }, [])
 
-  useEffect(() => {
-    if (!signedIn && !loading) {
-      router.push('/Registration')
-    }
-  }, [signedIn, loading, router])
+  // useEffect(() => {
+  //   if (!signedIn && !loading) {
+  //     router.push('/Registration')
+  //   }
+  // }, [signedIn, loading, router])
 
   if (loading) return <Loader />;
-  if (!signedIn) return null
+  if (!signedIn) return <Registration/>
   return <MainPage />
 }

@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 
 const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
   const [active, setActive] = useState<null | number>(null)
-  const { user, signedIn, setUser, setSignedIn, setProgress } = useUser()
+  const { user, signedIn, setUser, setSignedIn, setProgress, setDevInfo } = useUser()
   const capitalizeFirstName = (name?: string) => {
     if (name) {
       const firstName = name.split(' ')[0]; // Get the first name
@@ -40,12 +40,21 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
   })
 
   const logout = () => {
-    if(signedIn) {
+    localStorage.removeItem('user')
+    localStorage.removeItem('signedIn')
+    if (signedIn) {
       setUser({ fullname: '', email: '', password: '', firstName: '' })
       setSignedIn(false)
       setProgress(0)
       router.push('/Registration')
+      sessionStorage.clear()
+      setDevInfo({
+        DevField: '',
+        DevExperience: 0,
+        DevStack: []
+      })
     }
+    setTimeout(() => { setVisible(false) }, 200);
   }
 
   return (
@@ -97,7 +106,7 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
           <FaCog className='text-col mr-3 text-[28px] mb-1.5' /> Settings
         </span>
 
-        <Button style='absolute bottom-20 w-[280px] text-[20px]' onclick={() => { logout; setTimeout(() => { setVisible(false) }, 200) }}>{signedIn ? (<> Sign Out <FaSignOutAlt className='ml-3' />  </>) : (<><FaSignInAlt className='ml-3' /> Sign In</>)}</Button>
+        <Button style='absolute bottom-20 w-[280px] text-[20px] z-50' onclick={logout}>{signedIn ? (<> Sign Out <FaSignOutAlt className='ml-3' />  </>) : (<><FaSignInAlt className='ml-3' /> Sign In</>)}</Button>
       </div>
     </div>
   )

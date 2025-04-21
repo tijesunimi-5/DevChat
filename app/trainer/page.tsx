@@ -4,14 +4,17 @@ import { useUser } from '@/components/UserContext'
 import React, { useState } from 'react'
 
 const page = () => {
-  const { user, setLinkUploadProgress, setQnAProgress } = useUser()
+  const { user, setLinkUploadProgress, setQnAProgress, devInfo, setDevInfo, linkUploadProgress } = useUser()
   const [edit, setEdit] = useState<number | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [loaded, setLoaded] = useState<boolean>(false)
   const [fileName, setFile] = useState<string>('')
-
   const [portfolioLink, setPortfolioLink] = useState<string>('')
   const [portfolioInfo, setPortfolioInfo] = useState<string>('')
+  const [devFieldEdit, setDevFieldEdit] = useState<string>('')
+  const [editName, setEditName] = useState(user.fullname || '')
+
+  //this function converts the user's first character name to capital letter
   const capitalizeFullnameFirstLetters = (name?: string) => {
     if (name) {
       return name
@@ -21,7 +24,6 @@ const page = () => {
     }
     return '';
   };
-
   const fullname = capitalizeFullnameFirstLetters(user.fullname);
 
   //to toggle edit button
@@ -34,30 +36,48 @@ const page = () => {
     setEdit(null)
   }
 
+  //this function checks if portfolio inputs are empty if not it sets the linkprogress to 100
   const save = () => {
     setLoading(true)
-    if (!portfolioInfo || !portfolioLink) {
-      return
+    if (!portfolioInfo || !portfolioLink) return
+
+    //this function checks from localstorage if the user has filled this link if not adds 100 to it
+    if (linkUploadProgress < 100) {
+      setLinkUploadProgress(100)
+      setTimeout(() => {
+        setLoading(false)
+        setLoaded(true)
+      }, 4000)
     }
 
-    setLinkUploadProgress(100)
-
-    setTimeout(() => {
-      setLoading(false)
-    }, 4000)
-
-    if (!loading) {
-      setLoaded(true)
-      return
-    }
   }
 
+  //this function handles the change in pdf input file, get the file, and filename
   const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setFile(file.name)
     }
   };
+
+  //this is the function for devfieldedit
+  const handleDevFieldEdit = (): void => {
+    if (!devFieldEdit.trim()) {
+      console.warn('Dev field is empty. Not saving.');
+      return;
+    }
+
+    setDevInfo(prev => ({
+      ...prev,
+      DevField: devFieldEdit.trim(),
+    }));
+
+
+    console.log('DevField updated to:', devFieldEdit.trim());
+
+    setEdit(null);
+  };
+
 
   return (
     <div className='pt-12 px-3 overflow-hidden'>
@@ -73,12 +93,12 @@ const page = () => {
           <div className='section1 h-full w-[300px] ml-3'>
             <div className="regShad px-3 py-2 mt-3 relative">
               <p className="ques">What's your name?</p>
-              <Button onclick={() => editBtn(0)} style='absolute top-2 right-3 h-[21px]'>
+              <Button onclick={() => editBtn(0)} style={`absolute top-2 right-3 h-[21px] ${edit === 0 ? 'hidden' : 'block'}`}>
                 Edit
               </Button>
 
               {edit === 0 ? (<>
-                <input type='text' className='border-white border w-[325px] rounded py-1 px-1 mt-2' />
+                <input type='text' className='border-white border w-[275px] rounded py-1 px-1 mt-2' />
                 <Button style='h-[22px] mt-3'>Save</Button>
               </>)
                 :
@@ -89,17 +109,17 @@ const page = () => {
 
             <div className="regShad px-3 py-2 mt-5 relative">
               <p className="ques">What development do you specialize in?</p>
-              <Button onclick={() => editBtn(1)} style='align-right flex top-2 right-3 h-[21px]'>Edit</Button>
+              <Button onclick={() => editBtn(1)} style={`align-right flex top-2 right-3 h-[21px] ${edit === 1 ? 'hidden' : 'block'}`}>Edit</Button>
               {edit === 1
                 ?
                 (<>
-                  <input type='text' className='border-white border w-[325px] rounded py-1 px-1 mt-2' />
-                  <Button style='h-[22px] mt-3'>Save</Button>
+                  <input type='text' className='border-white border w-[275px] rounded py-1 px-1 mt-2' value={devFieldEdit} onChange={(e) => setDevFieldEdit(e.target.value)} />
+                  <Button style='h-[22px] mt-3' onclick={handleDevFieldEdit}>Save</Button>
                 </>)
                 :
                 (<>
                   <p className="ans border-[#fff] py-1 border rounded px-1 mt-2">
-                    Frontend Development
+                    {devInfo.DevField}
                   </p>
                 </>)}
             </div>
@@ -150,7 +170,8 @@ const page = () => {
           Project Description
         </h1>
         <p className="tip">• Add project link and information here</p>
-        <textarea className='regShad resize-none h-[200px] outline-none w-[350px] mt-2 px-2' />
+        <input type='text' placeholder='link' className='border-white border w-[350px] rounded py-1 px-1 mt-2 outline-none' />
+        <textarea className='regShad resize-none h-[200px] outline-none w-[350px] mt-2 px-2' placeholder='info' />
 
         <Button style='h-[30px] mt-3'
           onclick={save}>

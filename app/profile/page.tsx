@@ -7,6 +7,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 import { motion } from 'framer-motion'
+import Registration from '@/components/Registration'
 
 const page = () => {
   const { user } = useUser()
@@ -16,6 +17,7 @@ const page = () => {
     }
   }
   const firstname = capitalLetter(user.firstName)
+  const {signedIn} = useUser()
 
   useEffect(() => {
     if (window.innerWidth <= 375) {
@@ -31,6 +33,7 @@ const page = () => {
     }
   }, [])
 
+  if (!signedIn) return <Registration />
   return (
     <div className='pt-12 px-3'>
       <div className="devProfile">

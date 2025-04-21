@@ -59,9 +59,6 @@ const page = () => {
       }, 1000)
     }
   }
-  useEffect(() => {
-    setSignedIn(false)
-  })
 
   const increaseProgress = () => {
     setProgress(prev => Math.min(prev + 25, 100));

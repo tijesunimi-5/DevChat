@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <header className='flex px-3 py-1 fixed right-0 left-0 justify-between items-center border-b border-[#3D3CC9] z-50'>
       <div className="blur absolute left-0 right-0 bottom-0 top-0"></div>
-      <Link href={'/'} className='text-2xl font-bold  z-10'>Dev<span className='text-[#4545d0]'>Chat</span></Link>
+      <Link href={'/home'} className='text-2xl font-bold  z-10'>Dev<span className='text-[#4545d0]'>Chat</span></Link>
 
       <div className="nav hidden">
 

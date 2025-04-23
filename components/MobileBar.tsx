@@ -10,7 +10,8 @@ import { useRouter } from 'next/navigation'
 
 const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
   const [active, setActive] = useState<null | number>(null)
-  const { user, signedIn, setUser, setSignedIn, setProgress, setDevInfo } = useUser()
+  const { user, signedIn, setUser, setSignedIn, setProgress, setDevInfo, setLinkUploadProgress, setQnAProgress, setTrainModelProgress } = useUser()
+  
   const capitalizeFirstName = (name?: string) => {
     if (name) {
       const firstName = name.split(' ')[0]; // Get the first name
@@ -18,7 +19,6 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
     }
     return '';
   };
-
   const firstname = capitalizeFirstName(user.fullname);
 
   const router = useRouter()
@@ -42,6 +42,9 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
   const logout = () => {
     localStorage.removeItem('user')
     localStorage.removeItem('signedIn')
+    localStorage.removeItem('dev-projects')
+    localStorage.removeItem('QnAProgress')
+    localStorage.removeItem('dev-more-info')
     if (signedIn) {
       setUser({ fullname: '', email: '', password: '', firstName: '' })
       setSignedIn(false)
@@ -53,6 +56,9 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
         DevExperience: 0,
         DevStack: []
       })
+      setLinkUploadProgress(0)
+      setQnAProgress(0)
+      setTrainModelProgress(0)
     }
     setTimeout(() => { setVisible(false) }, 200);
   }
@@ -100,10 +106,6 @@ const MobileBar = ({ isVisible, setVisible }: any | boolean) => {
 
         <span onClick={() => { handleClick(6); setTimeout(() => { setVisible(false) }, 200) }} className={`${active === 6 ? 'text-[#3D3CC9]' : 'text-white'} font-bold text-2xl cursor-pointer pt-5 border-b z-30 flex items-center`}>
           <FaFile className='text-col mr-3 text-[28px] mb-1.5' /> Documentation
-        </span>
-
-        <span onClick={() => { handleClick(7); setTimeout(() => { setVisible(false) }, 200) }} className={`${active === 7 ? 'text-[#3D3CC9]' : 'text-white'} font-bold text-2xl cursor-pointer pt-5 border-b z-30 flex items-center`}>
-          <FaCog className='text-col mr-3 text-[28px] mb-1.5' /> Settings
         </span>
 
         <Button style='absolute bottom-20 w-[280px] text-[20px] z-50' onclick={logout}>{signedIn ? (<> Sign Out <FaSignOutAlt className='ml-3' />  </>) : (<><FaSignInAlt className='ml-3' /> Sign In</>)}</Button>

@@ -10,11 +10,10 @@ import Registration from './Registration'
 gsap.registerPlugin(ScrollTrigger)
 
 const MainPage: React.FC = () => {
-  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress, setSignedIn } = useUser()
+  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress, trainModelProgress } = useUser()
   const [registerProgress, setRegisterProgress] = useState<number>(0)
   const [techStackProgress, setTechStackProgress] = useState<number>(0)
-  const [bQAProgress, setBQProgress] = useState<number>(0)//for basic QnA
-  const router = useRouter()
+  const [nextStep, setNextStep] = useState<string>('')
 
   //this function is for setting user's first character to capital letter
   const capitalizeFirstName = (name?: string) => {
@@ -82,17 +81,35 @@ const MainPage: React.FC = () => {
       setProgress(20)
     }
 
+    //this function is to set the nextstep for users to know what to do next
+    if (linkUploadProgress < 100) {
+      setNextStep('• Add your project links and information')
+    } else if (QnAProgress < 100) {
+      setNextStep('• Fill in form to give more info about what you do!')
+    } else if (trainModelProgress < 100) {
+      setNextStep('• Train your model on the information you\'ve provided')
+    } else {
+      setNextStep('Completed, Congratulations!🎉 You can now preview and deploy your model')
+    }
+
     //this checks if the user has provided link to portfolio
     if (
       typeof linkUploadProgress === 'number' &&
       typeof progress === 'number' &&
-      linkUploadProgress === 100 &&
-      progress < 30
+      linkUploadProgress === 100
     ) {
-      setProgress((prev) => prev + 10);
+      setProgress((prev) => prev + 10)
     }
 
-  }, [user, signedIn, linkUploadProgress])
+    if (QnAProgress === 100) {
+      setProgress((prev) => prev + 20)
+    }
+
+    if (trainModelProgress === 100) {
+      setProgress((prev) => prev + 50)
+    }
+
+  }, [user, signedIn, linkUploadProgress, QnAProgress, trainModelProgress])
 
   //this checks if user is signed in if not redirects to registration page
   if (!signedIn) return <Registration />
@@ -108,10 +125,24 @@ const MainPage: React.FC = () => {
 
           <div className="next-step text-gray-400 fade-txt">
             Your next step: <br />
-            • Link your social hand handle links
+            {nextStep}
           </div>
 
-          <p className="underline text-col font-bold tracking-wide fade">Complete next step</p>
+          {progress < 100 ?
+            (
+              <>
+                <Link href={'/trainer'} className="underline text-col font-bold tracking-wide fade">
+                  Complete next step
+                </Link>
+              </>)
+            :
+            (
+              <>
+                <Link href={'/preview'} className="underline text-col font-bold tracking-wide fade">
+                  Preview your model
+                </Link>
+              </>
+            )}
         </div>
         <CircularProgress percentage={progress} />
       </div>
@@ -165,7 +196,7 @@ const MainPage: React.FC = () => {
 
         <div className="creation flex flex-col regShad justify-center items-center w-[300px] mt-8 ml-5 rounded-xl relative pb-6 scroll scale-[0.7]">
           <h2 className='pt-2 text-[18px]'>Train the chatbot model</h2>
-          <CircularProgress percentage={10} />
+          <CircularProgress percentage={trainModelProgress} />
           <p className='text-col underline absolute bottom-1 left-2'>complete now</p>
           <p className='absolute bottom-0.5 right-2 text-gray-400'>50%</p>
         </div>

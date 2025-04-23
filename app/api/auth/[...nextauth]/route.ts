@@ -10,38 +10,27 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-  async jwt({ token, user }) {
-      if (typeof window !== 'undefined' && user) {
-        console.log("User from Google:", user); 
-        localStorage.setItem('user', JSON.stringify({
-          name: user.name,
-          email: user.email
-        }))
-        token.name = user.name
-        token.email = user.email
-        token.picture = user.image
+    async jwt({ token, user }) {
+      // This runs on the server, so no localStorage access
+      if (user) {
+        console.log("User from Google:", user);
+        token.name = user.name;
+        token.email = user.email;
+        token.picture = user.image;
       }
-    
-    return token;
+      return token;
+    },
+    async session({ session, token }) {
+      console.log("Session callback - token:", token);
+      // Populate session.user with token data
+      session.user = {
+        name: token.name as string,
+        email: token.email as string,
+        image: token.picture as string,
+      };
+      return session;
+    },
   },
-  async session({ session, token }) {
-    console.log("Session callback - token:", token); // Debug here
-
-    if (typeof window !== 'undefined' ) {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        session.user = {
-          name: user.name,
-          email: user.email,
-          image: token.picture as string,
-        };
-      }
-    }
-    return session;
-  },
-},
-
 };
 
 const handler = NextAuth(authOptions);

@@ -1,60 +1,47 @@
+'use client';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { useUser } from './UserContext'; // Adjust path to your context
+import { useUser } from './UserContext';
 
 export default function Logged() {
-  // const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
   const { setUser, setSignedIn } = useUser();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    const storedSignedIn = localStorage.getItem('signedIn')
+    if (status === 'authenticated' && session?.user) {
+      console.log("Session User: ", session.user);
 
-    
+      // Save user to localStorage
+      const userData = {
+        name: session.user.name || '',
+        email: session.user.email || '',
+        image: session.user.image || '',
+      };
+      localStorage.setItem('user', JSON.stringify(userData));
+      console.log('User saved to localStorage:', userData);
 
-    if (storedSignedIn === 'true' && storedUser) {
-      const user = JSON.parse(storedUser)
-      console.log('User from localstorage: ', user)
-
+      // Update UserContext
       setUser({
-        fullname: user.fullname || '',
-        email: user.email || '',
-        password: user.password || "" 
-      })
+        fullname: session.user.name || '',
+        email: session.user.email || '',
+        password: '', // Google Sign-In doesn't provide a password
+      });
+      setSignedIn(true);
 
-      // setSignedIn(true)
-    } 
-    else {
+      // Save signedIn status to localStorage
+      localStorage.setItem('signedIn', 'true');
+    } else if (status === 'unauthenticated') {
+      // Clear user data if not authenticated
+      localStorage.removeItem('user');
+      localStorage.setItem('signedIn', 'false');
       setUser({
         fullname: '',
         email: '',
-        password: ''
-      })
+        password: '',
+      });
+      setSignedIn(false);
     }
-    
-    
-    // if (status === 'authenticated' && session?.user) {
-    //   console.log("Session User: ", session.user); // Log to see the session object
+  }, [status, session, setUser, setSignedIn]);
 
-    //   // Set user in context or state
-    //   setUser({
-    //     fullname: session.user.name || '',
-    //     email: session.user.email || '',
-    //     // image: session.user.image || '',
-    //     password: '', // Set blank or handle password separately
-    //   });
-
-    //   setSignedIn(true);
-    // } else {
-    //   setUser({
-    //     fullname: '',
-    //     email: '',
-    //     password: ''
-    //   })
-
-    //   setSignedIn(false)
-    // }
-  }, [  setUser ]);
-
-  return null; // You can render any component here based on session status
+  return null; // This component doesn't render anything
 }

@@ -24,21 +24,36 @@ const Loader = () => {
         setCurrentText(text[nextIndex])
         setOpacity(true)
       }, 1000)
-    },  2000)
+    }, 2000)
 
     return () => clearInterval(interval)
   }, [currentText])
 
   return (
     <div className='w-screen h-screen flex justify-center flex-col items-center z-40 relative'>
-      <FaMessage className='text-7xl mt-[-100px] text-[#3D3CC9]' />
-      <h1 className='text-3xl font-bold tracking-wider mb-5'>Dev<span className='text-[#3D3CC9]'>Chat</span></h1>
 
-      <div className='w-[300px] bg-black rounded-3xl h-2 overflow-hidden flex mb-5 absolute bottom-[250px]'>
-        <span className='w-[50px] rounded-2xl bg-white h-2 loader'></span>
+      <div className='flex flex-col items-center md:mt-[-50px] relative loader-div'>
+
+        <FaMessage className='text-7xl mt-[-100px] text-[#3D3CC9]' />
+
+        <h1 className='text-3xl font-bold tracking-wider mb-5'>
+          Dev
+          <span className='text-[#3D3CC9]'>
+            Chat
+          </span>
+        </h1>
+
+        <div
+          className='w-[300px] bg-black rounded-3xl h-2 overflow-hidden flex mb-5 absolute bottom-[-30px] md:bottom-[-50px]'>
+          <span className='w-[50px] rounded-2xl bg-white h-2 loader'></span>
+        </div>
+
+        <p
+          ref={textDisplayRef}
+          className={`absolute bottom-[-80px] w-[350px] md:bottom-[-100px] md:w-[400px] ${opacity ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000  text-display text-center`}>
+          {currentText}
+        </p>
       </div>
-
-      <p ref={textDisplayRef} className={`absolute bottom-[200px] ${opacity ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000  text-display text-center`}>{currentText}</p>
     </div>
   )
 }

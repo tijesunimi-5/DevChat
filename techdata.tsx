@@ -169,10 +169,24 @@ export const techStacks = {
   ],
 }
 
-// export function getTechStackForSpecialty(specialty: string) {
-//   return techStacks[specialty.toLowerCase()] || []
-// }
-
 export const filterTechStack = (stacks: string[]) => {
-  return stacks.filter((stack) => stack.toLowerCase() !== 'others');
-};
+  return stacks.filter((stack) => stack.toLowerCase() !== 'others')
+}
+
+export function getTechStackForSpecialty(specialty: string) {
+  if (!specialty) return []
+
+  const normalizedSpecialty = specialty
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '_')
+
+  const stackKeys = Object.keys(techStacks).reduce((acc, key) => {
+    acc[key.toLowerCase().replace(/\s+/g, '_')] = key
+    return acc
+  }, {} as Record<string, string>)
+
+  const originalKey = stackKeys[normalizedSpecialty]
+  const stack = originalKey ? techStacks[originalKey as keyof typeof techStacks] : []
+  return filterTechStack(stack)
+}

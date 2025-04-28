@@ -10,10 +10,12 @@ import Registration from './Registration'
 gsap.registerPlugin(ScrollTrigger)
 
 const MainPage: React.FC = () => {
-  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress, trainModelProgress } = useUser()
+  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress, trainModelProgress, barVisible, isProfileSetupComplete } = useUser()
   const [registerProgress, setRegisterProgress] = useState<number>(0)
   const [techStackProgress, setTechStackProgress] = useState<number>(0)
   const [nextStep, setNextStep] = useState<string>('')
+  const [circleRadius, setCircleRadius] = useState<number>(45)
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   //this function is for setting user's first character to capital letter
   const capitalizeFirstName = (name?: string) => {
@@ -27,39 +29,23 @@ const MainPage: React.FC = () => {
 
 
   useEffect(() => {
-    //mobile gsap
-    if (window.innerWidth <= 375) {
-      gsap.to('.cover',
-        { width: 0, duration: 5 }
-      )
-      gsap.fromTo('.fade-txt',
-        { opacity: 0 },
-        { opacity: 1, duration: 3, delay: 1 }
-      )
-      gsap.fromTo('.fade-txt2',
-        { marginLeft: '-100px', opacity: 0 },
-        { marginLeft: 0, opacity: 1, duration: 2 }
-      )
-      gsap.fromTo('.fade',
-        { opacity: 0 },
-        { opacity: 1, duration: 6 }
-      )
-      gsap.fromTo('.scale',
-        { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.5, }
-      )
-      gsap.fromTo('.scale2',
-        { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.5, delay: 0.5 }
-      )
-      gsap.fromTo('.scale3',
-        { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.5, delay: 1 }
-      )
-      gsap.fromTo('.scale4',
-        { scale: 0.5, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1.5, delay: 1.5 }
-      )
+    setIsLoading(false);
+    // Responsiveness for circle radius
+    if (window.innerWidth >= 768) {
+      setCircleRadius(80);
+    } else if (window.innerWidth <= 768) {
+      setCircleRadius(45);
+    }
+
+    // GSAP animations for mobile
+      gsap.to('.cover', { width: 0, duration: 5 });
+      gsap.fromTo('.fade-txt', { opacity: 0 }, { opacity: 1, duration: 3, delay: 1 });
+      gsap.fromTo('.fade-txt2', { marginLeft: '-100px', opacity: 0 }, { marginLeft: 0, opacity: 1, duration: 2 });
+      gsap.fromTo('.fade', { opacity: 0 }, { opacity: 1, duration: 6 });
+      gsap.fromTo('.scale', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5 });
+      gsap.fromTo('.scale2', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 0.5 });
+      gsap.fromTo('.scale3', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 1 });
+      gsap.fromTo('.scale4', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 1.5 });
       gsap.to('.scroll', {
         scale: 1,
         opacity: 1,
@@ -68,28 +54,50 @@ const MainPage: React.FC = () => {
           trigger: '.scroll',
           start: 'top 90%',
           end: 'top 60%',
-          scrub: 2
-        }
-      }
-      )
-    }
+          scrub: 2,
+        },
+      });
 
-    //this checks if user has gone through the basic process and display the page
+    gsap.to('.scroll', {
+      scale: 1,
+      opacity: 1,
+      duration: 2,
+      scrollTrigger: {
+        trigger: '.scroll',
+        start: 'top 90%',
+        end: 'top 60%',
+        scrub: 2,
+      },
+    });
+
+    // Set initial progress and tech stack if signed in
     if (user && signedIn) {
-      setRegisterProgress(100)
-      setTechStackProgress(100)
-      setProgress(20)
+      setRegisterProgress(100);
+      setTechStackProgress(100);
     }
 
-    //this function is to set the nextstep for users to know what to do next
+    // Calculate total progress
+    let newProgress = 20; // Base progress for registration and tech stack
+    if (linkUploadProgress === 100) {
+      newProgress += 10;
+    }
+    if (QnAProgress === 100) {
+      newProgress += 20;
+    }
+    if (trainModelProgress === 100) {
+      newProgress += 50;
+    }
+    setProgress(newProgress);
+
+    // Set next step
     if (linkUploadProgress < 100) {
-      setNextStep('• Add your project links and information')
+      setNextStep('• Add your project links and information');
     } else if (QnAProgress < 100) {
-      setNextStep('• Fill in form to give more info about what you do!')
+      setNextStep('• Fill in form to give more info about what you do!');
     } else if (trainModelProgress < 100) {
-      setNextStep('• Train your model on the information you\'ve provided')
+      setNextStep('• Train your model on the information you’ve provided');
     } else {
-      setNextStep('Completed, Congratulations!🎉 You can now preview and deploy your model')
+      setNextStep('Completed, Congratulations!🎉 You can now preview and deploy your model');
     }
 
     //this checks if the user has provided link to portfolio
@@ -111,19 +119,20 @@ const MainPage: React.FC = () => {
 
   }, [user, signedIn, linkUploadProgress, QnAProgress, trainModelProgress])
 
-  //this checks if user is signed in if not redirects to registration page
-  if (!signedIn) return <Registration />
+  if (isLoading) return <div>Loading...</div>;
+  if (!signedIn || !isProfileSetupComplete) return <Registration />;
   return (
-    <div className='pt-10 px-3'>
-      <div className="welcome text-xl mt-5 font-bold relative">
+    <div className='pt-10 px-3 md:px-24 xl:px-[220px] relative'>
+      {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0`}></div>)}
+      <div className="welcome text-xl mt-5 font-bold relative lg:text-[28px] lg:pt-5">
         Welcome, {firstname} 👋
         <span className='bg-[#0a0a0a] cover absolute w-full h-full right-0'></span>
       </div>
-      <div className='mt-5 px-2 py-3 rounded regShad flex justify-between overflow-hidden'>
+      <div className='mt-5 px-2 py-3 rounded regShad flex justify-between overflow-hidden md:h-[200px] xl:w-[700px] xl:h-[300px]'>
         <div className='flex flex-col'>
-          <p className='text-[18px] fade-txt2'>You're {progress}% set for your model</p>
+          <p className='text-[18px] fade-txt2 md:text-[24px]'>You're {progress}% set for your model</p>
 
-          <div className="next-step text-gray-400 fade-txt">
+          <div className="next-step text-gray-400 fade-txt md:text-[19px] md:ml-2">
             Your next step: <br />
             {nextStep}
           </div>
@@ -131,26 +140,28 @@ const MainPage: React.FC = () => {
           {progress < 100 ?
             (
               <>
-                <Link href={'/trainer'} className="underline text-col font-bold tracking-wide fade">
+                <Link href={'/trainer'} className="underline text-col font-bold tracking-wide fade md:text-[21px]">
                   Complete next step
                 </Link>
               </>)
             :
             (
               <>
-                <Link href={'/preview'} className="underline text-col font-bold tracking-wide fade">
+                <Link href={'/preview'} className="underline text-col font-bold tracking-wide fade md:text-[21px]">
                   Preview your model
                 </Link>
               </>
             )}
         </div>
-        <CircularProgress percentage={progress} />
+        <div>
+          <CircularProgress percentage={progress} />
+        </div>
       </div>
 
       <div className="steps mt-5 flex flex-col">
         <h1 className='text-center text-3xl font-bold'>Steps</h1>
         <div className='flex mt-5'>
-          <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl scale">
+          <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl scale md:h-[250px]">
             <h2 className='text-[18px] pt-2'>Create an account</h2>
             <CircularProgress percentage={registerProgress} />
           </div>
@@ -163,7 +174,7 @@ const MainPage: React.FC = () => {
         </div>
 
         <div className='flex mt-8'>
-          <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl relative pb-6 scale3">
+          <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl relative pb-6 scale3 md:h-[250px]">
             <h2 className='text-[18px] pt-2 text-center'>Upload your links...</h2>
             <CircularProgress percentage={linkUploadProgress} />
             {linkUploadProgress < 100
@@ -194,14 +205,16 @@ const MainPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="creation flex flex-col regShad justify-center items-center w-[300px] mt-8 ml-5 rounded-xl relative pb-6 scroll scale-[0.7]">
-          <h2 className='pt-2 text-[18px]'>Train the chatbot model</h2>
-          <CircularProgress percentage={trainModelProgress} />
-          <p className='text-col underline absolute bottom-1 left-2'>complete now</p>
-          <p className='absolute bottom-0.5 right-2 text-gray-400'>50%</p>
+        <div>
+          <div className="train flex flex-col regShad justify-center items-center w-[300px] mt-8 ml-5 rounded-xl relative pb-6 scroll scale-[0.7] md:w-[480px] md:ml-0 lg:ml-[150px] lg:w-[700px]">
+            <h2 className='pt-2 text-[18px]'>Train the chatbot model</h2>
+            <CircularProgress percentage={trainModelProgress} />
+            <p className='text-col underline absolute bottom-1 left-2'>complete now</p>
+            <p className='absolute bottom-0.5 right-2 text-gray-400'>50%</p>
+          </div>
         </div>
 
-        <div className="analytics mt-7">
+        <div className="analytics mt-14">
           <h1 className='text-3xl font-bold text-center mb-3'>Anayltics</h1>
           <CircularProgress percentage={0} />
         </div>

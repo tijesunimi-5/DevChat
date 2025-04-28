@@ -9,7 +9,7 @@ const ChatWidget = () => {
   const [userInput, setUserInput] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [botRes, setBotRes] = useState<boolean>(false)
-  const {signedIn} = useUser()
+  const {signedIn, isProfileSetupComplete} = useUser()
 
   const sendMessage = () => {
     if (userInput) {
@@ -40,7 +40,7 @@ const ChatWidget = () => {
     }
   }
 
-  if(!signedIn) return <Registration />
+  if (!signedIn || !isProfileSetupComplete) return <Registration />;
   return (
     <div className='fixed bottom-4 right-4 p-4  bg-transparent regShad rounded-lg shadow-lg z-50'>
       <div className="h-64 overflow-y-auto">

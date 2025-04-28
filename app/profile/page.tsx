@@ -13,7 +13,7 @@ import AddMoreStacks from '@/components/AddMoreStacks';
 import Link from 'next/link';
 
 const page = () => {
-  const { user, devInfo, signedIn } = useUser();
+  const { user, devInfo, signedIn, isProfileSetupComplete, barVisible } = useUser();
   const [information, setInformation] = useState<string | null>('');
 
   useEffect(() => {
@@ -30,11 +30,23 @@ const page = () => {
   };
   const firstname = capitalizeFirstName(user.fullname);
 
-  if (!signedIn) return <Registration />;
+  useEffect(() => {
+    gsap.fromTo(".p-txt", {
+      opacity: 0,
+      y: 20
+    }, {
+      opacity: 1,
+      y: 0,
+      duration: 2,
+    })
+  }, [])
+
+  if (!signedIn || !isProfileSetupComplete) return <Registration />;
   return (
-    <div className="pt-12 px-3">
+    <div className="pt-12 px-3 relative">
+      {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0`}></div>)}
       <div className="devProfile">
-        <h1 className="text-3xl font-bold tracking-wide ml-3">Dev• {firstname}</h1>
+        <h1 className="p-txt text-3xl font-bold tracking-wide ml-3 md:mt-5 md:mx-10 z-20">Dev• {firstname}</h1>
 
         <motion.div
           initial={{
@@ -49,16 +61,14 @@ const page = () => {
             duration: 2,
             staggerChildren: 0.3,
           }}
-          className="devStack regShad px-2 py-4 mt-4 relative scale"
+          className="devStack regShad px-2 py-4 mt-4 relative scale md:mx-10 z-30"
         >
           <div className="field text-2xl font-bold tracking-wide leading-relaxed mb-2 mt-[-8px]">{devInfo.DevField}</div>
 
           <div className="stack mx-3">
             <ul className="grid grid-cols-3 leading-relaxed pb-3">
               {(() => {
-                console.log('Before filtering:', devInfo.DevStack);
                 const filteredStacks = filterTechStack(devInfo.DevStack);
-                console.log('After filtering:', filteredStacks);
                 return filteredStacks.map((stack, idx) => (
                   <li key={idx}>{stack}</li>
                 ));

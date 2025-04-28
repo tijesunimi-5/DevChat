@@ -9,7 +9,6 @@ import { useUser } from "@/components/UserContext";
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(true)
   const { signedIn, setUser } = useUser()
-  const router = useRouter()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -44,22 +43,16 @@ export default function Home() {
     }
 
     //would be toggled when code becomes more robust. what this does is it waits till the site if fully loaded (it first displays the loading page then when site is loaded, it displays the page content)
-    // if (document.readyState === 'complete') {
-    //   handleLoad();
-    // } else {
-    //   window.addEventListener('load', handleLoad)
-    // }
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad)
+    }
 
-    // return () => {
-    //   window.removeEventListener('load', handleLoad)
-    // }
+    return () => {
+      window.removeEventListener('load', handleLoad)
+    }
   }, [])
-
-  // useEffect(() => {
-  //   if (!signedIn && !loading) {
-  //     router.push('/Registration')
-  //   }
-  // }, [signedIn, loading, router])
 
   if (loading) return <Loader />;
   if (!signedIn) return <Registration/>

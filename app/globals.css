@@ -134,7 +134,7 @@ body {
   transform: rotate(-90deg);
 }
 .circle-bg {
-  stroke: #3D3CC9;
+  stroke: #3d3cc9;
 }
 .circle-progress {
   stroke: #fefefefe;
@@ -148,7 +148,7 @@ body {
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #3D3CC9;
+  color: #3d3cc9;
 }
 .circle-container {
   position: relative;
@@ -159,4 +159,146 @@ body {
 }
 input {
   outline: none;
+}
+
+@media (width >= 344px) {
+  .loader-div {
+    margin-top: -200px;
+  }
+}
+
+@media (width >= 375px) {
+  .loader-div {
+    margin-top: 0px;
+  }
+}
+
+@media (width >= 390px) {
+  .loader-div {
+    margin-top: -100px;
+  }
+  .train {
+    margin-left: 35px;
+  }
+}
+
+@media (width >= 412px) {
+  .train {
+    margin-left: 42px;
+  }
+}
+
+@media (width >= 414px) {
+  .loader-div {
+    margin-top: -150px;
+  }
+  .train {
+    margin-left: 50px;
+  }
+}
+
+@media (width >= 430px) {
+  .loader-div {
+    margin-top: -150px;
+  }
+}
+
+@media (width >= 540px) {
+  .loader-div {
+    margin-top: 50px;
+  }
+}
+
+@media (width >= 768px) {
+  .loader-div {
+    margin-top: -280px;
+  }
+  .inputbox {
+    width: 455px;
+  }
+}
+
+@media (width >= 820px) {
+  .loader-div {
+    margin-top: -450px;
+  }
+}
+
+@media (width >= 853px) {
+  .loader-div {
+    margin-top: -500px;
+  }
+}
+
+@media (width >= 912px) {
+  .loader-div {
+    margin-top: -700px;
+  }
+}
+
+@media (width >= 1024px) {
+  .loader-div {
+    margin-top: -650px;
+  }
+}
+
+@media (width >= 1280px) {
+  .loader-div {
+    margin-top: 0;
+    margin-left: 0;
+  }
+}
+
+/* Existing styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box !important;
+}
+
+.customScrollbar {
+  overflow-x: scroll !important;
+  overflow-y: hidden !important;
+  scrollbar-color: #3D3C99 #000000 !important;
+  scrollbar-width: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.customScrollbar::-webkit-scrollbar {
+  height: 12px !important;
+  width: 0 !important;
+  display: block !important;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: #000000 !important;
+  border: 1px solid #333333 !important;
+  border-radius: 6px !important;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background-color: #3D3C99 !important;
+  border-radius: 6px !important;
+  border: 2px solid #000000 !important;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #2a2a6d !important;
+}
+
+.customScrollbar::-webkit-scrollbar:vertical {
+  display: none !important;
+}
+
+/* Disable scrollbar styles at xl breakpoint (1280px and above) */
+@media (min-width: 1280px) {
+  .customScrollbar {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important; /* Firefox: hide scrollbar */
+  }
+
+  .customScrollbar::-webkit-scrollbar {
+    display: none !important; /* WebKit: hide scrollbar */
+  }
 }

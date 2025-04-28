@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { techStacks } from '../techdata'
+import { getTechStackForSpecialty, filterTechStack } from '../techdata'
 import { useUser } from '@/components/UserContext'
 import Button from '@/components/Button'
 import { FaTimes } from 'react-icons/fa'
@@ -11,13 +11,14 @@ const AddMoreStacks = () => {
   const [showOtherInput, setShowOtherInput] = useState(false)
   const [customTech, setCustomTech] = useState('')
 
-  const fieldKey = devInfo.DevField as keyof typeof techStacks
-  const allStacks = techStacks[fieldKey] || []
+  // Use getTechStackForSpecialty to fetch filtered stack (excludes "Others")
+  const allStacks = getTechStackForSpecialty(devInfo.DevField || '')
   const selectedStacks = devInfo.DevStack || []
 
   const addStack = (stack: string) => {
-    if (stack.trim() && !selectedStacks.includes(stack)) {
-      setDevInfo(prev => ({ ...prev, DevStack: [...selectedStacks, stack.trim()] }))
+    const trimmedStack = stack.trim()
+    if (trimmedStack && !selectedStacks.includes(trimmedStack) && trimmedStack.toLowerCase() !== 'others') {
+      setDevInfo(prev => ({ ...prev, DevStack: [...selectedStacks, trimmedStack] }))
     }
   }
 
@@ -30,6 +31,7 @@ const AddMoreStacks = () => {
     if (e.key === 'Enter' && customTech.trim()) {
       addStack(customTech)
       setCustomTech('')
+      setShowOtherInput(false) // Close input after adding
     }
   }
 
@@ -63,27 +65,31 @@ const AddMoreStacks = () => {
       {showOptions && (
         <div className="mt-3 p-3 border rounded-lg shadow-sm max-h-[250px] overflow-y-auto bg-black text-white">
           <h3 className="font-semibold text-lg mb-2">Choose more tech stacks:</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {allStacks.map(stack => (
+          {allStacks.length > 0 ? (
+            <div className="grid grid-cols-2 gap-2">
+              {allStacks.map(stack => (
+                <button
+                  key={stack}
+                  onClick={() => addStack(stack)}
+                  disabled={selectedStacks.includes(stack)}
+                  className={`py-1 px-2 rounded border ${selectedStacks.includes(stack)
+                    ? 'border-gray-600 text-gray-400 cursor-not-allowed'
+                    : 'border-[#3D3C99] text-white hover:bg-[#3D3C99]'
+                    }`}
+                >
+                  {stack}
+                </button>
+              ))}
               <button
-                key={stack}
-                onClick={() => addStack(stack)}
-                disabled={selectedStacks.includes(stack)}
-                className={`py-1 px-2 rounded border ${selectedStacks.includes(stack)
-                  ? 'border-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'border-[#3D3C99] text-white hover:bg-[#3D3C99]'
-                  }`}
+                onClick={() => setShowOtherInput(true)}
+                className="py-1 px-2 rounded border border-dashed border-[#3D3C99] hover:bg-[#3D3C99] col-span-2 text-left"
               >
-                {stack}
+                + Custom stack
               </button>
-            ))}
-            <button
-              onClick={() => setShowOtherInput(true)}
-              className="py-1 px-2 rounded border border-dashed border-[#3D3C99] hover:bg-[#3D3C99] col-span-2 text-left"
-            >
-              + Others (custom)
-            </button>
-          </div>
+            </div>
+          ) : (
+            <p className="text-gray-400">No tech stacks available for your specialty.</p>
+          )}
 
           {showOtherInput && (
             <div className="mt-3">

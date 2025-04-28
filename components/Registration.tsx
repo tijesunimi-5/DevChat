@@ -20,6 +20,7 @@ const Registration = () => {
   const { user, setUser, signedIn, setSignedIn, setLinkUploadProgress, isProfileSetupComplete } = useUser()
 
   useEffect(() => {
+    console.log('Registration useEffect:', { signedIn, isProfileSetupComplete })
     if (signedIn && isProfileSetupComplete) {
       router.push('/home')
     }
@@ -58,6 +59,31 @@ const Registration = () => {
       setAlert(false)
       router.push('/Registration/profileSetup')
     }, 1500)
+  }
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true)
+    try {
+      console.log('Initiating Google Sign-In')
+      const result = await signIn('google', { callbackUrl: '/Registration/profileSetup', redirect: false })
+      console.log('Google Sign-In result:', result)
+      if (result?.error) {
+        setMessage('Google Sign-In failed: ' + result.error)
+        setAlert(true)
+        setTimeout(() => {
+          setAlert(false)
+          setLoading(false)
+        }, 1500)
+      }
+    } catch (error) {
+      console.error('Google Sign-In error:', error)
+      setMessage('Google Sign-In failed')
+      setAlert(true)
+      setTimeout(() => {
+        setAlert(false)
+        setLoading(false)
+      }, 1500)
+    }
   }
 
   return (
@@ -101,7 +127,7 @@ const Registration = () => {
           </h2>
         </div>
         <div className="optional mt-2">
-          <Button style="md:w-[360px]" onclick={() => signIn('google', { callbackUrl: '/Registration/profileSetup' })}>
+          <Button style="md:w-[360px]" onclick={handleGoogleSignIn}>
             <FaGoogle className="mr-2" />
             Sign up with Google
           </Button>

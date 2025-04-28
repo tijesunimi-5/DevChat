@@ -3,7 +3,6 @@ import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
 import { NextAuthOptions } from 'next-auth'
 
-// Define auth options
 const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -34,20 +33,33 @@ const authOptions: NextAuthOptions = {
           image: token.picture as string,
         }
       }
+      console.log('Session callback:', session)
       return session
     },
     async signIn({ user, account }) {
-      if (account?.provider === 'google' || account?.provider === 'github') {
-        return true
+      try {
+        if (account?.provider === 'google' || account?.provider === 'github') {
+          console.log('SignIn success:', { user, account })
+          return true
+        }
+        console.error('SignIn failed: Unsupported provider', account?.provider)
+        return false
+      } catch (error) {
+        console.error('SignIn error:', error)
+        return false
       }
-      return false
     },
     async redirect({ url, baseUrl }) {
-      if (url.includes('profileSetup')) {
+      try {
+        console.log('Redirect:', { url, baseUrl })
+        if (url.includes('profileSetup')) {
+          return `${baseUrl}/Registration/profileSetup`
+        }
         return `${baseUrl}/Registration/profileSetup`
+      } catch (error) {
+        console.error('Redirect error:', error)
+        return `${baseUrl}/Registration/login`
       }
-      // Cannot access localStorage here; rely on client-side UserContext
-      return `${baseUrl}/Registration/profileSetup`
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
@@ -55,10 +67,8 @@ const authOptions: NextAuthOptions = {
     signIn: '/Registration/login',
     error: '/Registration/error',
   },
+  debug: process.env.NODE_ENV === 'development',
 }
 
-// Create NextAuth handler for App Router
 const handler = NextAuth(authOptions)
-
-// Export HTTP methods
 export { handler as GET, handler as POST }

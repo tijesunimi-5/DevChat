@@ -76,6 +76,35 @@ const Login = () => {
     }, 1500)
   }
 
+  const handleGoogleSignIn = async () => {
+    setLoading(true)
+    try {
+      const result = await signIn('google', { callbackUrl: isProfileSetupComplete ? '/home' : '/Registration/profileSetup', redirect: false })
+      if (result?.error) {
+        setMessage(`Google Sign-In failed: ${result.error}`)
+        setAlert(true)
+        setTimeout(() => {
+          setAlert(false)
+          setLoading(false)
+        }, 1500)
+      } else if (result?.ok) {
+        setMessage('Google Sign-In successful')
+        setAlert(true)
+        setTimeout(() => {
+          setAlert(false)
+          setLoading(false)
+        }, 1500)
+      }
+    } catch (error) {
+      setMessage('Google Sign-In failed')
+      setAlert(true)
+      setTimeout(() => {
+        setAlert(false)
+        setLoading(false)
+      }, 1500)
+    }
+  }
+
   return (
     <div className="md:w-full md:flex md:justify-center">
       <div className="pt-12 px-2 relative pb-8 flex flex-col justify-center items-center">
@@ -97,6 +126,7 @@ const Login = () => {
           <Button
             types="submit"
             style="bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20"
+            // disabled={loading}
           >
             {loading ? 'Authenticating...' : 'Sign In'}
           </Button>
@@ -112,13 +142,18 @@ const Login = () => {
           </h2>
         </div>
         <div className="optional mt-2">
-          <Button style="md:w-[360px]" onclick={() => signIn('google', { callbackUrl: '/Registration/profileSetup' })}>
+          <Button
+            style="md:w-[360px]"
+            onclick={handleGoogleSignIn}
+            // disabled={loading}
+          >
             <FaGoogle className="mr-2" />
             Sign In with Google
           </Button>
           <Button
             style="mt-3 md:w-[360px]"
-            onclick={() => signIn('github', { callbackUrl: '/Registration/profileSetup' })}
+            onclick={() => signIn('github', { callbackUrl: isProfileSetupComplete ? '/home' : '/Registration/profileSetup' })}
+            // disabled={loading}
           >
             <FaGithub className="mr-3" />
             Sign In with Github

@@ -20,7 +20,6 @@ const Registration = () => {
   const { user, setUser, signedIn, setSignedIn, setLinkUploadProgress, isProfileSetupComplete } = useUser()
 
   useEffect(() => {
-    console.log('Registration useEffect:', { signedIn, isProfileSetupComplete })
     if (signedIn && isProfileSetupComplete) {
       router.push('/home')
     }
@@ -64,11 +63,16 @@ const Registration = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true)
     try {
-      console.log('Initiating Google Sign-In')
       const result = await signIn('google', { callbackUrl: '/Registration/profileSetup', redirect: false })
-      console.log('Google Sign-In result:', result)
       if (result?.error) {
-        setMessage('Google Sign-In failed: ' + result.error)
+        setMessage(`Google Sign-In failed: ${result.error}`)
+        setAlert(true)
+        setTimeout(() => {
+          setAlert(false)
+          setLoading(false)
+        }, 1500)
+      } else if (result?.ok) {
+        setMessage('Google Sign-In successful')
         setAlert(true)
         setTimeout(() => {
           setAlert(false)
@@ -76,7 +80,6 @@ const Registration = () => {
         }, 1500)
       }
     } catch (error) {
-      console.error('Google Sign-In error:', error)
       setMessage('Google Sign-In failed')
       setAlert(true)
       setTimeout(() => {
@@ -112,6 +115,7 @@ const Registration = () => {
           <Button
             types="submit"
             style="bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20"
+            // disabled={loading}
           >
             {loading ? 'Creating...' : 'Sign Up'}
           </Button>
@@ -121,19 +125,24 @@ const Registration = () => {
         </form>
         <div className="flex justify-center mb-5 px-5">
           <h2 className="text-2xl font-bold text-center mt-3 flex justify-center items-center">
-            <hr className="bg-white w-[120px] mr-5" />
+            <hr className="bg-white w-[120pxID] mr-5" />
             Or
             <hr className="bg-white w-[120px] ml-5" />
           </h2>
         </div>
         <div className="optional mt-2">
-          <Button style="md:w-[360px]" onclick={handleGoogleSignIn}>
+          <Button
+            style="md:w-[360px]"
+            onclick={handleGoogleSignIn}
+            // disabled={loading}
+          >
             <FaGoogle className="mr-2" />
             Sign up with Google
           </Button>
           <Button
             style="mt-3 md:w-[360px]"
             onclick={() => signIn('github', { callbackUrl: '/Registration/profileSetup' })}
+            // disabled={loading}
           >
             <FaGithub className="mr-3" />
             Sign up with Github

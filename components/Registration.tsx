@@ -125,7 +125,7 @@ const Registration = () => {
         </form>
         <div className="flex justify-center mb-5 px-5">
           <h2 className="text-2xl font-bold text-center mt-3 flex justify-center items-center">
-            <hr className="bg-white w-[120pxID] mr-5" />
+            <hr className="bg-white w-[120px] mr-5" />
             Or
             <hr className="bg-white w-[120px] ml-5" />
           </h2>

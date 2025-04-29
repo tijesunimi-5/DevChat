@@ -151,7 +151,7 @@ const Page = () => {
   const techSpecialties = Object.keys(techStacks).filter((key) => key !== 'database');
 
   return (
-    <div ref={rootRef} className="h-[200vh] px-3 pt-12 md:px-9 md:pt-14 lg:px-14 lg:pt-16 relative">
+    <div ref={rootRef} className="px-3 pt-12 md:px-9 md:pt-14 lg:px-14 lg:pt-16 relative xl:ml-[100px]">
       {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0`}></div>)}
       <ul>
         <h2 className="text-[22px] font-bold tracking-wide lg:mt-5">Tips:</h2>
@@ -244,31 +244,34 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Remaining content in a scrollable container */}
-      <div className="mt-10 max-h-[calc(100vh-600px)] overflow-y-hidden">
+      <div className="mt-10 mx-5">
         {/* Display saved projects */}
-        <div className="overflow-y-hidden">
-          <h1 className="text-[22px] font-bold tracking-wide">Saved Projects</h1>
-          <ul className="space-y-4 mt-4">
-            {projects.map((project, index) => (
-              <li key={index} className="regShad p-2 rounded">
-                <p>
-                  <strong>Link:</strong> <a href={project.link} className="underline">{project.link}</a>
-                </p>
-                <p>
-                  <strong>Info:</strong> {project.info}
-                </p>
-              </li>
-            ))}
-          </ul>
+        <div className=" xl:ml-[200px]">
+          <h1 className="text-[22px] font-bold tracking-wide  xl:ml-[310px] xl:my-8 xl:mt-10">Saved Projects</h1>
+          {projects.length === 0 ? (
+            <p className="regShad p-4 mt-4 rounded text-center xl:w-[800px]">No saved projects</p>
+          ) : (
+            <ul className="space-y-4 mt-4">
+              {projects.map((project, index) => (
+                <li key={index} className="regShad p-2 rounded">
+                  <p>
+                    <strong>Link:</strong> <a href={project.link} className="underline">{project.link}</a>
+                  </p>
+                  <p>
+                    <strong>Info:</strong> {project.info}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Additional Info Section */}
-        <div className="mt-10 pb-10 overflow-y-hidden">
+        <div className="mt-10 pb-10 xl:ml-[200px]">
           <h1 className="additional text-[22px] font-bold tracking-wide">More Info</h1>
-          <p className="tip">• Add additional information about yourself here</p>
+          <p className="tip xl:my-3">• Add additional information about yourself here</p>
           <textarea
-            className="regShad resize-none h-[100px] outline-none w-[350px] mt-2 px-2"
+            className="regShad resize-none h-[100px] outline-none w-[350px] mt-2 px-2 lg:w-[800px] lg:h-[200px]"
             value={moreInfo}
             onChange={(e) => setMoreInfo(e.target.value)}
           />
@@ -277,7 +280,7 @@ const Page = () => {
           </Button>
         </div>
 
-        <Button style="mb-5 h-[35px] ml-[100px]" onclick={trainModel}>
+        <Button style="mb-5 h-[35px] ml-[100px] lg:ml-[400px] lg:mb-20 xl:ml-[500px] xl:mt-20" onclick={trainModel}>
           Train Model
         </Button>
 

@@ -123,16 +123,16 @@ const MainPage: React.FC = () => {
   if (!signedIn || !isProfileSetupComplete) return <Registration />;
   return (
     <div className='pt-10 px-3 md:px-24 xl:px-[220px] relative'>
-      {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0`}></div>)}
-      <div className="welcome text-xl mt-5 font-bold relative lg:text-[28px] lg:pt-5">
+      {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0 transition-all duration-500 ease-in-out`}></div>)}
+      <div className="welcome text-xl mt-5 font-bold relative lg:text-[28px] lg:pt-5 xl:ml-[150px] xl:mt-10">
         Welcome, {firstname} 👋
         <span className='bg-[#0a0a0a] cover absolute w-full h-full right-0'></span>
       </div>
-      <div className='mt-5 px-2 py-3 rounded regShad flex justify-between overflow-hidden md:h-[200px] xl:w-[700px] xl:h-[300px]'>
+      <div className='mt-5 px-2 py-3 rounded regShad flex justify-between overflow-hidden md:h-[200px] xl:w-[800px] xl:h-[220px] xl:ml-[150px]'>
         <div className='flex flex-col'>
           <p className='text-[18px] fade-txt2 md:text-[24px]'>You're {progress}% set for your model</p>
 
-          <div className="next-step text-gray-400 fade-txt md:text-[19px] md:ml-2">
+          <div className="next-step text-gray-400 fade-txt md:text-[19px] md:ml-2 xl:my-8">
             Your next step: <br />
             {nextStep}
           </div>
@@ -153,13 +153,13 @@ const MainPage: React.FC = () => {
               </>
             )}
         </div>
-        <div>
+        <div className='xl:mr-10'>
           <CircularProgress percentage={progress} />
         </div>
       </div>
 
-      <div className="steps mt-5 flex flex-col">
-        <h1 className='text-center text-3xl font-bold'>Steps</h1>
+      <div className="steps mt-20 flex flex-col xl:ml-[140px]">
+        <h1 className='text-center text-3xl font-bold xl:ml-[-110px]'>Steps</h1>
         <div className='flex mt-5'>
           <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl scale md:h-[250px]">
             <h2 className='text-[18px] pt-2'>Create an account</h2>
@@ -214,13 +214,13 @@ const MainPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="analytics mt-14">
+        <div className="analytics mt-14 xl:ml-[-100px]">
           <h1 className='text-3xl font-bold text-center mb-3'>Anayltics</h1>
           <CircularProgress percentage={0} />
         </div>
       </div>
 
-      <div className="info mt-10">
+      <div className="info mt-10 xl:mb-20">
         <h1 className='text-3xl font-bold text-[#3D3CC9] mb-2'>Overview</h1>
         <p className='leading-normal text-[18px]'>DevChat is an AI-powered chatbot platform designed to help developers revolutionalize their portfolio. With DevChat, you can easily crete and train a chatbot to engage with recruiters, answer common questions, and showcase your skills and projects - all from one platform.</p>
 

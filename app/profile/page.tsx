@@ -43,9 +43,9 @@ const page = () => {
 
   if (!signedIn || !isProfileSetupComplete) return <Registration />;
   return (
-    <div className="pt-12 px-3 relative">
-      {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0`}></div>)}
-      <div className="devProfile">
+    <div className="pt-12 px-3 relative xl:mx-[220px]">
+      {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0 z-40`}></div>)}
+      <div className="devProfile mt-10">
         <h1 className="p-txt text-3xl font-bold tracking-wide ml-3 md:mt-5 md:mx-10 z-20">Dev• {firstname}</h1>
 
         <motion.div
@@ -61,7 +61,7 @@ const page = () => {
             duration: 2,
             staggerChildren: 0.3,
           }}
-          className="devStack regShad px-2 py-4 mt-4 relative scale md:mx-10 z-30"
+          className="devStack regShad px-2 py-4 mt-4 relative scale md:mx-10"
         >
           <div className="field text-2xl font-bold tracking-wide leading-relaxed mb-2 mt-[-8px]">{devInfo.DevField}</div>
 
@@ -78,7 +78,7 @@ const page = () => {
           </div>
         </motion.div>
 
-        <div className="about mt-8">
+        <div className="about mt-8 md:mx-10">
           <motion.h1
             initial={{
               marginLeft: '-150px',
@@ -116,9 +116,11 @@ const page = () => {
           <motion.p
             initial={{
               marginTop: '200px',
+              opacity: 0,
             }}
             animate={{
               marginTop: 0,
+              opacity: 1,
             }}
             transition={{
               duration: 2,

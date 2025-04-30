@@ -143,21 +143,21 @@ const Login = () => {
         </div>
         <div className="optional mt-2">
           <Button
-            style="md:w-[360px]"
+            style="md:w-[360px] border-[#3D3C99] bg-transparent border-2 text-[#3D3C99]"
             onclick={handleGoogleSignIn}
             // disabled={loading}
           >
             <FaGoogle className="mr-2" />
             Sign In with Google
           </Button>
-          <Button
+          {/* <Button
             style="mt-3 md:w-[360px]"
             onclick={() => signIn('github', { callbackUrl: isProfileSetupComplete ? '/home' : '/Registration/profileSetup' })}
             // disabled={loading}
           >
             <FaGithub className="mr-3" />
             Sign In with Github
-          </Button>
+          </Button> */}
         </div>
         {alert && <Alert msg={message} />}
       </div>

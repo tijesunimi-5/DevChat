@@ -132,21 +132,21 @@ const Registration = () => {
         </div>
         <div className="optional mt-2">
           <Button
-            style="md:w-[360px]"
+            style="md:w-[360px] bg-transparent border-[#3D3C99] border-2 "
             onclick={handleGoogleSignIn}
             // disabled={loading}
           >
             <FaGoogle className="mr-2" />
             Sign up with Google
           </Button>
-          <Button
+          {/* <Button
             style="mt-3 md:w-[360px]"
             onclick={() => signIn('github', { callbackUrl: '/Registration/profileSetup' })}
             // disabled={loading}
           >
             <FaGithub className="mr-3" />
             Sign up with Github
-          </Button>
+          </Button> */}
         </div>
         {alert && <Alert msg={message} />}
       </div>

@@ -6,6 +6,7 @@ import { techStacks } from '../../../techdata';
 import { useUser } from '@/components/UserContext';
 import Alert from '@/components/Alert';
 import { useRouter } from 'next/navigation';
+import Registration from '@/components/Registration';
 
 const Page = () => {
   const [experience, setExperience] = useState<string | number>(0);
@@ -21,7 +22,7 @@ const Page = () => {
   const [techs, setTechs] = useState<string[]>([]);
   const [otherTechs, setOtherTechs] = useState<string[]>([]);
 
-  const { progress, setProgress, devInfo, setDevInfo, setIsProfileSetupComplete } = useUser();
+  const { progress, setProgress, devInfo, setDevInfo, setIsProfileSetupComplete, signedIn } = useUser();
   const router = useRouter();
 
   const increaseProgress = () => {
@@ -106,6 +107,8 @@ const Page = () => {
     increaseProgress();
     router.push('/home');
   };
+
+  if(!signedIn) return <Registration />
 
   return (
     <div className="md:w-full md:flex md:justify-center">

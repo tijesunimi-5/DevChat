@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import React from "react";
 import ClientProviders from "@/components/ClientProviders";
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         {/* <MobileBar /> */}
         <ClientProviders>
           {children}
+          <Analytics />
         </ClientProviders>
       </body>
     </html>

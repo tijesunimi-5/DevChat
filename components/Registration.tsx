@@ -63,7 +63,7 @@ const Registration = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true)
     try {
-      const result = await signIn('google', { callbackUrl: '/Registration/profileSetup', redirect: true })
+      const result = await signIn('google', { callbackUrl: '/Registration/profileSetup', redirect: false })
       if (result?.error) {
         setMessage(`Google Sign-In failed: ${result.error}`)
         setAlert(true)

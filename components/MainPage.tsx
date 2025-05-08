@@ -129,7 +129,7 @@ const MainPage: React.FC = () => {
         Welcome, {firstname} 👋
         <span className='bg-[#0a0a0a] cover absolute w-full h-full right-0'></span>
       </div>
-      <div className='mt-5 px-2 py-3 rounded regShad flex justify-between overflow-hidden md:h-[200px] xl:w-[800px] xl:h-[220px] xl:ml-[150px]'>
+      <div className='mt-5 px-2 py-3 rounded regShad flex justify-between overflow-hidden md:h-[200px] xl:w-[800px] xl:h-[220px] xl:ml-[150px] linear_bg'>
         <div className='flex flex-col'>
           <p className='text-[18px] fade-txt2 md:text-[24px]'>You're {progress}% set for your model</p>
 
@@ -162,12 +162,12 @@ const MainPage: React.FC = () => {
       <div className="steps mt-20 flex flex-col xl:ml-[140px]">
         <h1 className='text-center text-3xl font-bold xl:ml-[-110px]'>Steps</h1>
         <div className='flex mt-5'>
-          <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl scale md:h-[250px]">
+          <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl scale md:h-[250px] linear_bg">
             <h2 className='text-[18px] pt-2'>Create an account</h2>
             <CircularProgress percentage={registerProgress} />
           </div>
 
-          <div className="creation flex flex-col regShad justify-center items-center w-[400px] ml-5 rounded-xl relative scale2">
+          <div className="creation flex flex-col regShad justify-center items-center w-[400px] ml-5 rounded-xl relative scale2 linear_bg">
             <h2 className='pt-2 text-[18px] text-center'>Choose your tech stack</h2>
             <CircularProgress percentage={techStackProgress} />
             <p className='absolute bottom-0.5 right-2 text-gray-400'>10%</p>
@@ -175,7 +175,7 @@ const MainPage: React.FC = () => {
         </div>
 
         <div className='flex mt-8'>
-          <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl relative pb-6 scale3 md:h-[250px]">
+          <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl relative pb-6 scale3 md:h-[250px] linear_bg">
             <h2 className='text-[18px] pt-2 text-center'>Upload your links...</h2>
             <CircularProgress percentage={linkUploadProgress} />
             {linkUploadProgress < 100
@@ -190,7 +190,7 @@ const MainPage: React.FC = () => {
             <p className='absolute bottom-0.5 right-2 text-gray-400'>10%</p>
           </div>
 
-          <div className="creation flex flex-col regShad justify-center items-center w-[400px] ml-5 rounded-xl relative pb-6 scale4">
+          <div className="creation flex flex-col regShad justify-center items-center w-[400px] ml-5 rounded-xl relative pb-6 scale4 linear_bg">
             <h2 className='pt-2 text-[18px]'>Basic QnA</h2>
             <CircularProgress percentage={QnAProgress} />
             {QnAProgress < 100
@@ -207,7 +207,7 @@ const MainPage: React.FC = () => {
         </div>
 
         <div>
-          <div className="train flex flex-col regShad justify-center items-center w-[300px] mt-8 ml-5 rounded-xl relative pb-6 scroll scale-[0.7] md:w-[480px] md:ml-0 lg:ml-[150px] lg:w-[700px]">
+          <div className="train flex flex-col regShad justify-center items-center w-[300px] mt-8 ml-5 rounded-xl relative pb-6 scroll scale-[0.7] md:w-[480px] md:ml-0 lg:ml-[150px] lg:w-[700px] linear_bg">
             <h2 className='pt-2 text-[18px]'>Train the chatbot model</h2>
             <CircularProgress percentage={trainModelProgress} />
             <p className='text-col underline absolute bottom-1 left-2'>complete now</p>

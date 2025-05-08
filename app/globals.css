@@ -53,7 +53,7 @@ body {
 }
 
 .linear_bg {
-  background: linear-gradient(to right bottom, #0a0a0a, #2E2E2E);
+  background: linear-gradient(to right , #0a0a0a, #2E2E2E);
 }
 .hover_btn {
   transition: all 0.3s ease;

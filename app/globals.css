@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #f5f5f5;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #f5f5f5;
 }
 
 @theme inline {
@@ -12,12 +12,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 .dark {
   --background: #0a0a0a !important;
@@ -50,6 +50,19 @@ body {
     transform: translateX(10px);
     background: #fff;
   }
+}
+
+.linear_bg {
+  background: linear-gradient(to right bottom, #0a0a0a, #2E2E2E);
+}
+.hover_btn {
+  transition: all 0.3s ease;
+} 
+.hover_btn:hover {
+  background: #3d3cc9;
+  color: #fff;
+  box-shadow: 0px 0px 8px -2.5px #3d3cc9, -1px -1px 1px -0.1px #fff;
+  pointer: cursor;
 }
 
 /* From Uiverse.io by VijinV */

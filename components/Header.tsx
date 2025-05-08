@@ -34,7 +34,7 @@ const Header = () => {
 
   return (
     <header className="flex px-3 py-1 fixed right-0 left-0 justify-between items-center border-b border-[#3D3CC9] z-50 md:px-14 lg:px-5 xl:px-14">
-      <div className="blur absolute left-0 right-0 bottom-0 top-0"></div>
+      <div className="blur absolute left-0 right-0 bottom-0 top-0 "></div>
       <h1 onClick={navigate} className="text-2xl font-bold z-10 lg:text-[30px] cursor-pointer">
         Dev<span className="text-[#4545d0]">Chat</span>
       </h1>

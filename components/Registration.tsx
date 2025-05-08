@@ -90,11 +90,11 @@ const Registration = () => {
   }
 
   return (
-    <div className="md:w-full md:flex md:justify-center">
+    <div className="md:w-full md:flex md:justify-center lg:pt-10">
       <div className="pt-12 px-2 relative pb-8 flex flex-col justify-center items-center">
-        <h1 className="text-2xl font-bold uppercase text-center mt-7">Sign Up</h1>
+        <h1 className="text-4xl font-bold uppercase text-center mt-7">Sign Up</h1>
         <form
-          className="mt-5 rounded-2xl regShad p-5 overflow-hidden relative flex flex-col justify-between md:w-[500px]"
+          className="mt-5 linear_bg rounded-2xl regShad p-5 overflow-hidden relative flex flex-col justify-between md:w-[500px]"
           onSubmit={handleSubmit}
         >
           <div className="inputbox mt-2">
@@ -114,13 +114,13 @@ const Registration = () => {
           </div>
           <Button
             types="submit"
-            style="bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20"
+            style="bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20 cursor-pointer"
             // disabled={loading}
           >
             {loading ? 'Creating...' : 'Sign Up'}
           </Button>
           <p className="mt-3 z-20">
-            Have an account? <Link href="/Registration/login" className="underline">Sign In</Link>
+            Have an account? <Link href="/Registration/login" className="underline cursor-pointer">Sign In</Link>
           </p>
         </form>
         <div className="flex justify-center mb-5 px-5">
@@ -132,7 +132,7 @@ const Registration = () => {
         </div>
         <div className="optional mt-2">
           <Button
-            style="md:w-[360px] bg-transparent border-[#3D3C99] border-2 "
+            style="md:w-[360px] linear_bg hover_btn cursor-pointer border-[#3D3C99] border-2 "
             onclick={handleGoogleSignIn}
             // disabled={loading}
           >

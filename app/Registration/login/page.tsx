@@ -106,11 +106,11 @@ const Login = () => {
   }
 
   return (
-    <div className="md:w-full md:flex md:justify-center">
+    <div className="md:w-full md:flex md:justify-center lg:pt-10">
       <div className="pt-12 px-2 relative pb-8 flex flex-col justify-center items-center">
-        <h1 className="text-2xl font-bold uppercase text-center mt-7">Sign In</h1>
+        <h1 className="text-4xl font-bold uppercase text-center mt-7">Sign In</h1>
         <form
-          className="mt-5 rounded-2xl regShad p-5 overflow-hidden relative flex flex-col justify-between md:w-[500px]"
+          className="mt-5 rounded-2xl regShad p-5 overflow-hidden relative flex flex-col justify-between md:w-[500px]  linear_bg"
           onSubmit={handleSubmit}
         >
           <div className="inputbox mt-5">
@@ -143,7 +143,7 @@ const Login = () => {
         </div>
         <div className="optional mt-2">
           <Button
-            style="md:w-[360px] border-[#3D3C99] bg-transparent border-2 text-[#3D3C99]"
+            style="md:w-[360px] border-[#3D3C99] linear_bg hover_btn cursor-pointer bg-transparent border-2 text-[#3D3C99]"
             onclick={handleGoogleSignIn}
             // disabled={loading}
           >

@@ -42,7 +42,6 @@ export default function Home() {
       setLoading(false)
     }
 
-    //would be toggled when code becomes more robust. what this does is it waits till the site if fully loaded (it first displays the loading page then when site is loaded, it displays the page content)
     if (document.readyState === 'complete') {
       handleLoad();
     } else {

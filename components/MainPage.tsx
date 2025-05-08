@@ -37,39 +37,6 @@ const MainPage: React.FC = () => {
       setCircleRadius(45);
     }
 
-    // GSAP animations for mobile
-      gsap.to('.cover', { width: 0, duration: 5 });
-      gsap.fromTo('.fade-txt', { opacity: 0 }, { opacity: 1, duration: 3, delay: 1 });
-      gsap.fromTo('.fade-txt2', { marginLeft: '-100px', opacity: 0 }, { marginLeft: 0, opacity: 1, duration: 2 });
-      gsap.fromTo('.fade', { opacity: 0 }, { opacity: 1, duration: 6 });
-      gsap.fromTo('.scale', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5 });
-      gsap.fromTo('.scale2', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 0.5 });
-      gsap.fromTo('.scale3', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 1 });
-      gsap.fromTo('.scale4', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 1.5 });
-      gsap.to('.scroll', {
-        scale: 1,
-        opacity: 1,
-        duration: 2,
-        scrollTrigger: {
-          trigger: '.scroll',
-          start: 'top 90%',
-          end: 'top 60%',
-          scrub: 2,
-        },
-      });
-
-    gsap.to('.scroll', {
-      scale: 1,
-      opacity: 1,
-      duration: 2,
-      scrollTrigger: {
-        trigger: '.scroll',
-        start: 'top 90%',
-        end: 'top 60%',
-        scrub: 2,
-      },
-    });
-
     // Set initial progress and tech stack if signed in
     if (user && signedIn) {
       setRegisterProgress(100);
@@ -118,6 +85,40 @@ const MainPage: React.FC = () => {
     }
 
   }, [user, signedIn, linkUploadProgress, QnAProgress, trainModelProgress])
+
+  useEffect(() => {
+    gsap.to('.cover', { width: 0, duration: 5 });
+    gsap.fromTo('.fade-txt', { opacity: 0 }, { opacity: 1, duration: 3, delay: 1 });
+    gsap.fromTo('.fade-txt2', { marginLeft: '-100px', opacity: 0 }, { marginLeft: 0, opacity: 1, duration: 2 });
+    gsap.fromTo('.fade', { opacity: 0 }, { opacity: 1, duration: 6 });
+    gsap.fromTo('.scale', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5 });
+    gsap.fromTo('.scale2', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 0.5 });
+    gsap.fromTo('.scale3', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 1 });
+    gsap.fromTo('.scale4', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.5, delay: 1.5 });
+    gsap.to('.scroll', {
+      scale: 1,
+      opacity: 1,
+      duration: 2,
+      scrollTrigger: {
+        trigger: '.scroll',
+        start: 'top 90%',
+        end: 'top 60%',
+        scrub: 2,
+      },
+    });
+
+    gsap.to('.scroll', {
+      scale: 1,
+      opacity: 1,
+      duration: 2,
+      scrollTrigger: {
+        trigger: '.scroll',
+        start: 'top 90%',
+        end: 'top 60%',
+        scrub: 2,
+      },
+    });
+  })
 
   if (isLoading) return <div>Loading...</div>;
   if (!signedIn || !isProfileSetupComplete) return <Registration />;

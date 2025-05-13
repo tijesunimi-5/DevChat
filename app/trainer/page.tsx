@@ -153,6 +153,7 @@ const Page = () => {
   return (
     <div ref={rootRef} className="px-3 pt-12 md:px-9 md:pt-14 lg:px-14 lg:pt-16 relative xl:ml-[100px]">
       {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0`}></div>)}
+      {/* ----- Tips ----- */}
       <ul>
         <h2 className="text-[22px] font-bold tracking-wide lg:mt-5">Tips:</h2>
         <li className="tip">• Always make sure to confirm your information before you train your model.</li>
@@ -161,18 +162,20 @@ const Page = () => {
 
       <div
         ref={scrollRef}
-        className="flex gap-9 overflow-x-scroll overflow-y-hidden customScrollbar mt-5 xl:overflow-hidden xl:mx-[100px]"
+        className="flex gap-9 overflow-x-scroll xl:ml-[-100px] overflow-y-hidden customScrollbar mt-5 xl:overflow-hidden xl:mx-[100px]"
       >
         {/* Editable sections */}
-        <div className="w-[3000px] xl:w-[3500px] flex gap-14 h-[300px]">
+        <div className="w-[3000px] xl:w-[3500px] flex gap-9 ml-8 md:ml-0 xl:gap-32 h-[300px]">
           <div className="snap-start"></div>
           <div className="section1 h-full w-[300px] ml-[-50px]">
-            <div className="regShad px-3 py-2 mt-3 relative xl:h-[100px]">
+            {/* ----- Name Input Edit ---- */}
+            <div className="regShad px-3 py-2 mt-3 relative xl:h-[100px] xl:w-[400px]">
               <p className="ques">What's your name?</p>
               <p className="ans border-[#fff] py-1 border rounded px-1 mt-2">{fullname}</p>
             </div>
 
-            <div className="regShad px-3 py-4 mt-5 relative xl:h-[156px]">
+            {/* --- Dev Field --- */}
+            <div className="regShad px-3 py-4 mt-5 relative xl:w-[400px] xl:h-[156px]">
               <p className="ques">What development do you specialize in?</p>
               <Button
                 onclick={() => editBtn(1)}
@@ -203,7 +206,8 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="section2 w-[348px] mr-2 snap-start">
+          {/* --- Links to projescts ---- */}
+          <div className="section2 w-[348px] mr-2 snap-start xl:w-[400px]">
             <div className="regShad px-3 py-3 mt-3">
               <p className="plink tip">Drop your project link and explict info (all your live works/projects)</p>
               <input
@@ -225,8 +229,9 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="section3 mr-2 w-[330px] mt-3 snap-start">
-            <div className="regShad h-[200px] px-3 py-1 relative xl:h-[150px]">
+              {/* --- Resume file --- */}
+          <div className="section3 mr-2 w-[330px] mt-3 snap-start xl:ml-[-100px]">
+            <div className="regShad h-[200px] px-3 py-1 relative xl:h-[150px] xl:w-[360px]">
               <label htmlFor="resume" className="h-12 border border-white px-2 py-2 rounded block cursor-pointer mt-3">
                 Provide your resume
               </label>
@@ -267,7 +272,7 @@ const Page = () => {
         </div>
 
         {/* Additional Info Section */}
-        <div className="mt-10 pb-10 xl:ml-[200px]">
+        <div className="mt-10 pb-10 xl:ml-[-50px]">
           <h1 className="additional text-[22px] font-bold tracking-wide">More Info</h1>
           <p className="tip xl:my-3">• Add additional information about yourself here</p>
           <textarea

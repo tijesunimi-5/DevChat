@@ -10,10 +10,6 @@ import Registration from '@/components/Registration';
 
 const Page = () => {
   const [experience, setExperience] = useState<string | number>(0);
-  const [githubLink, setGithubLink] = useState<string>('');
-  const [twitterLink, setTwitterLink] = useState<string>('');
-  const [linkedInLink, setLinkedInLink] = useState<string>('');
-  const [websiteLink, setWebsiteLink] = useState<string>('');
   const [field, setField] = useState('Fullstack developer');
   const [message, setMessage] = useState<string>('');
   const [alert, setAlert] = useState<boolean>(false);
@@ -21,18 +17,15 @@ const Page = () => {
   const [userStack, setUserStack] = useState<string[]>([]);
   const [techs, setTechs] = useState<string[]>([]);
   const [otherTechs, setOtherTechs] = useState<string[]>([]);
-
-  const { progress, setProgress, devInfo, setDevInfo, setIsProfileSetupComplete, signedIn } = useUser();
+  const {  setProgress, devInfo, setDevInfo, setIsProfileSetupComplete, signedIn, setTechStackProgress } = useUser();
   const router = useRouter();
 
-  const increaseProgress = () => {
-    setProgress((prev) => Math.min(prev + 20, 100));
-  };
-
+  // This gets the tech line the person is into either, frontend or backend or ml...
   const changeTechStack = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setField(e.target.value);
   };
 
+  // this get the necessary tech stack from the stack list when the user's selected stack matches, it displays the tech stack in relation to the dev's field
   useEffect(() => {
     const stackMap: { [key: string]: string[] } = {
       'Frontend developer': techStacks['Frontend developer'],
@@ -53,6 +46,7 @@ const Page = () => {
     }
   }, [field]);
 
+  // this handles the tech stack check boxes and also checks if the other btn is called
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
     setTechs((prev) => {
@@ -64,14 +58,17 @@ const Page = () => {
     });
   };
 
+  // this is the function that saves and allows for other tech stacks
   const addOtherTech = () => {
     setOtherTechs((prev) => [...prev, '']);
   };
 
+  // this toggle a close if you don't want to add new stack
   const removeOtherTech = (index: number) => {
     setOtherTechs((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // this get's the value of the new tech stack and adds it to the list
   const updateOtherTech = (index: number, value: string) => {
     setOtherTechs((prev) => {
       const newTechs = [...prev];
@@ -80,6 +77,7 @@ const Page = () => {
     });
   };
 
+  // this set's the field and the updatedTechs, removes the option of "Others" when mapping and then the setDev info is setted
   useEffect(() => {
     const updatedTechs = [...techs.filter((tech) => tech !== 'Others'), ...otherTechs.filter((tech) => tech.trim() !== '')];
     setDevInfo({
@@ -89,6 +87,7 @@ const Page = () => {
     });
   }, [field, techs, experience, otherTechs, setDevInfo]);
 
+  // final expression when all requirements are attended to
   const nextStep = () => {
     if (devInfo.DevExperience === 0 || devInfo.DevStack.length === 0) {
       setMessage('Select all fields!');
@@ -104,7 +103,8 @@ const Page = () => {
     localStorage.setItem('isProfileSetupComplete', 'true');
     setLoading(true);
     setTimeout(() => setLoading(false), 2000);
-    increaseProgress();
+    setTechStackProgress(100)
+    setProgress((prev) => Math.min(prev + 10, 100))
     router.push('/home');
   };
 
@@ -118,6 +118,8 @@ const Page = () => {
         </h1>
         <div className="mt-5 rounded-2xl regShad p-5 overflow-hidden relative flex flex-col justify-between md:w-[500px]">
           <div className="devOpt">
+
+            {/* Option to choose dev field */}
             <div>
               <h2>What do you do?</h2>
               <select
@@ -138,6 +140,7 @@ const Page = () => {
                 <option value="Mobile developer">Mobile developer</option>
               </select>
             </div>
+            {/* fetches the tech stack in respect to the user's dev field */}
             <div className="grid grid-cols-2 w-[300px] mt-3 md:w-[500px] md:grid-cols-3">
               {userStack.map((stack) => (
                 <label key={stack}>
@@ -154,6 +157,7 @@ const Page = () => {
                 </label>
               ))}
             </div>
+            {/* for the other option */}
             {techs.includes('Others') && (
               <div className="otherOpt">
                 <div className="mt-2">
@@ -175,6 +179,8 @@ const Page = () => {
                       </button>
                     </div>
                   ))}
+
+                  {/* trigger for more stack */}
                   <button
                     type="button"
                     onClick={addOtherTech}
@@ -185,6 +191,8 @@ const Page = () => {
                 </div>
               </div>
             )}
+
+            {/* Input for user's years of experience */}
             <div>
               <h2 className="mt-5">What's your years of experience</h2>
               <input

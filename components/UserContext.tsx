@@ -1,6 +1,5 @@
 'use client'
 import React, { createContext, useState, useContext, useEffect } from 'react'
-import { signOut, useSession } from 'next-auth/react'
 
 interface User {
   fullname: string
@@ -35,6 +34,10 @@ interface UserContextProps {
   logout: () => void
   barVisible: boolean
   setBarVisible: React.Dispatch<React.SetStateAction<boolean>>
+  setRegistrationProgress: React.Dispatch<React.SetStateAction<number>>
+  registrationProgress: number
+  setTechStackProgress: React.Dispatch<React.SetStateAction<number>>
+  techStackProgress: number
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined)
@@ -66,34 +69,8 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [QnAProgress, setQnAProgress] = useState<number>(0)
   const [trainModelProgress, setTrainModelProgress] = useState<number>(0)
   const [barVisible, setBarVisible] = useState<boolean>(false)
-
-  // Sync with next-auth session
-  const { data: session } = useSession()
-  useEffect(() => {
-    if (session) {
-      setSignedIn(true)
-      setUser({
-        fullname: session.user?.name || '',
-        email: session.user?.email || '',
-        password: '',
-        firstName: session.user?.name?.split(' ')[0] || '',
-      })
-      localStorage.setItem(
-        'user',
-        JSON.stringify({
-          fullname: session.user?.name || '',
-          email: session.user?.email || '',
-          password: '',
-          firstName: session.user?.name?.split(' ')[0] || '',
-        })
-      )
-      localStorage.setItem('signedIn', 'true')
-      if (localStorage.getItem('devInfo')) {
-        setIsProfileSetupComplete(true)
-        localStorage.setItem('isProfileSetupComplete', 'true')
-      }
-    }
-  }, [session])
+  const [registrationProgress, setRegistrationProgress] = useState<number>(0)
+  const [techStackProgress, setTechStackProgress] = useState<number>(0)
 
   // Hydrate states from localStorage
   useEffect(() => {
@@ -108,6 +85,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         const storedQnA = localStorage.getItem('QnAProgress')
         const storedTrainedProgress = localStorage.getItem('Train-model-progress')
         const storedBarVisibility = localStorage.getItem('bar-visibility')
+        const storedRegistrationProgress = localStorage.getItem('registration-progress')
+        const storedTechstackProgress = localStorage.getItem('techStack-progress')
+
 
         if (storedUser) {
           setUser(JSON.parse(storedUser) || { fullname: '', email: '', password: '', firstName: '' })
@@ -127,23 +107,31 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
           setIsProfileSetupComplete(storedIsProfileSetupComplete === 'true')
         }
         if (storedProgress) {
-          const parsedProgress = parseInt(storedProgress, 10)
+          const parsedProgress = parseInt(storedProgress, 0)
           setProgress(isNaN(parsedProgress) ? 0 : parsedProgress) // Prevent NaN
         }
         if (storedLinkProgress) {
-          const parsedLinkProgress = parseInt(storedLinkProgress, 10)
+          const parsedLinkProgress = parseInt(storedLinkProgress, 0)
           setLinkUploadProgress(isNaN(parsedLinkProgress) ? 0 : parsedLinkProgress)
         }
         if (storedQnA) {
-          const parsedQnA = parseInt(storedQnA, 10)
+          const parsedQnA = parseInt(storedQnA, 0)
           setQnAProgress(isNaN(parsedQnA) ? 0 : parsedQnA)
         }
         if (storedTrainedProgress) {
-          const parsedTrainedProgress = parseInt(storedTrainedProgress, 10)
+          const parsedTrainedProgress = parseInt(storedTrainedProgress, 0)
           setTrainModelProgress(isNaN(parsedTrainedProgress) ? 0 : parsedTrainedProgress)
         }
         if (storedBarVisibility) {
           setBarVisible(storedBarVisibility === 'true')
+        }
+        if (storedRegistrationProgress) {
+          const parsedRegistrationProgress = parseInt(storedRegistrationProgress, 0)
+          setRegistrationProgress(isNaN(parsedRegistrationProgress) ? 0 : parsedRegistrationProgress)
+        }
+        if (storedTechstackProgress) {
+          const parsedTechstackProgess = parseInt(storedTechstackProgress, 0)
+          setTechStackProgress(isNaN(parsedTechstackProgess) ? 0 : parsedTechstackProgess)
         }
       } catch (error) {
         console.error('Error hydrating state from localStorage:', error)
@@ -173,13 +161,15 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem('QnAProgress', QnAProgress.toString())
       localStorage.setItem('Train-model-progress', trainModelProgress.toString())
       localStorage.setItem('bar-visibility', barVisible.toString())
+      localStorage.setItem('registration-progress', registrationProgress.toString())
+      localStorage.setItem('techStack-progress', techStackProgress.toString())
     } catch (error) {
       console.error('Error persisting state to localStorage:', error)
     }
   }, [user, devInfo, signedIn, isProfileSetupComplete, progress, linkUploadProgress, QnAProgress, trainModelProgress, barVisible])
 
   const logout = () => {
-    signOut({ callbackUrl: '/Registration' })
+    // signOut({ callbackUrl: '/Registration' })
     setUser({ fullname: '', email: '', password: '', firstName: '' })
     setDevInfo({ DevField: '', DevStack: [], DevExperience: 0 })
     setSignedIn(false)
@@ -189,6 +179,8 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setQnAProgress(0)
     setTrainModelProgress(0)
     setBarVisible(false)
+    setRegistrationProgress(0)
+    setTechStackProgress(0)
     localStorage.removeItem('user')
     localStorage.removeItem('devInfo')
     localStorage.removeItem('signedIn')
@@ -200,7 +192,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem('QnAProgress')
     localStorage.removeItem('Train-model-progress')
     localStorage.removeItem('bar-visibility')
-    sessionStorage.clear()
+    // sessionStorage.clear()
   }
 
   return (
@@ -225,6 +217,10 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         logout,
         barVisible,
         setBarVisible,
+        setRegistrationProgress,
+        registrationProgress,
+        setTechStackProgress,
+        techStackProgress
       }}
     >
       {children}

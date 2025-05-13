@@ -5,14 +5,13 @@ import CircularProgress from './CircularProgress'
 import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useRouter } from 'next/navigation'
 import Registration from './Registration'
 gsap.registerPlugin(ScrollTrigger)
 
 const MainPage: React.FC = () => {
-  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress, trainModelProgress, barVisible, isProfileSetupComplete } = useUser()
+  const { user, progress, setProgress, signedIn, linkUploadProgress, QnAProgress, trainModelProgress, barVisible, isProfileSetupComplete, registrationProgress, techStackProgress } = useUser()
   const [registerProgress, setRegisterProgress] = useState<number>(0)
-  const [techStackProgress, setTechStackProgress] = useState<number>(0)
+  const [clientStack, setClientStack] = useState<number>(0)
   const [nextStep, setNextStep] = useState<string>('')
   const [circleRadius, setCircleRadius] = useState<number>(45)
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -27,34 +26,26 @@ const MainPage: React.FC = () => {
   };
   const firstname = capitalizeFirstName(user.fullname);
 
+  useEffect(() => {
+    if (registrationProgress === 100) {
+      setRegisterProgress(100)
+    } 
+    if (techStackProgress === 100) {
+      setClientStack(100)
+    }
+  }, [registrationProgress, techStackProgress])
 
   useEffect(() => {
-    setIsLoading(false);
     // Responsiveness for circle radius
     if (window.innerWidth >= 768) {
       setCircleRadius(80);
     } else if (window.innerWidth <= 768) {
       setCircleRadius(45);
     }
+  }, [])
 
-    // Set initial progress and tech stack if signed in
-    if (user && signedIn) {
-      setRegisterProgress(100);
-      setTechStackProgress(100);
-    }
-
-    // Calculate total progress
-    let newProgress = 20; // Base progress for registration and tech stack
-    if (linkUploadProgress === 100) {
-      newProgress += 10;
-    }
-    if (QnAProgress === 100) {
-      newProgress += 20;
-    }
-    if (trainModelProgress === 100) {
-      newProgress += 50;
-    }
-    setProgress(newProgress);
+  useEffect(() => {
+    setIsLoading(false);
 
     // Set next step
     if (linkUploadProgress < 100) {
@@ -86,6 +77,7 @@ const MainPage: React.FC = () => {
 
   }, [user, signedIn, linkUploadProgress, QnAProgress, trainModelProgress])
 
+  // gsap animation
   useEffect(() => {
     gsap.to('.cover', { width: 0, duration: 5 });
     gsap.fromTo('.fade-txt', { opacity: 0 }, { opacity: 1, duration: 3, delay: 1 });
@@ -104,6 +96,7 @@ const MainPage: React.FC = () => {
         start: 'top 90%',
         end: 'top 60%',
         scrub: 2,
+        // markers: true
       },
     });
 
@@ -169,7 +162,7 @@ const MainPage: React.FC = () => {
 
           <div className="creation flex flex-col regShad justify-center items-center w-[400px] ml-5 rounded-xl relative scale2 linear_bg">
             <h2 className='pt-2 text-[18px] text-center'>Choose your tech stack</h2>
-            <CircularProgress percentage={techStackProgress} />
+            <CircularProgress percentage={clientStack} />
             <p className='absolute bottom-0.5 right-2 text-gray-400'>10%</p>
           </div>
         </div>

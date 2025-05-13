@@ -6,29 +6,29 @@ import { FaGithub, FaGoogle } from 'react-icons/fa'
 import { useRouter } from 'next/navigation'
 import Alert from '../../../components/Alert'
 import { useUser } from '../../../components/UserContext'
-import { signIn } from 'next-auth/react'
 
 const Login = () => {
-  const [progress, setProgress] = useState<number>(15)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [message, setMessage] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [alert, setAlert] = useState<boolean>(false)
   const router = useRouter()
-  const { setSignedIn, setLinkUploadProgress, isProfileSetupComplete } = useUser()
+  const { setSignedIn, setLinkUploadProgress, isProfileSetupComplete, user, registrationProgress, setProgress } = useUser()
 
+  // this check if the profile setup is complete, if it is, redirect to home, and also checks if the user data is available, if not, all progress and data are set to null
   useEffect(() => {
     if (isProfileSetupComplete) {
       router.push('/home')
     }
-    if (!localStorage.getItem('user')) {
+    if (!user) {
       setLinkUploadProgress(0)
       localStorage.removeItem('dev-projects')
       localStorage.removeItem('dev-more-info')
     }
   }, [isProfileSetupComplete, setLinkUploadProgress, router])
 
+  // this function handles the login button 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
@@ -65,8 +65,12 @@ const Login = () => {
     }
 
     setSignedIn(true)
-    localStorage.setItem('signedIn', 'true')
-    setProgress((prev) => Math.min(prev + 25, 100))
+    //this checks if the user has created an account before, if yes, the information aren't lost
+    if (registrationProgress === 100) {
+      console.log('registration has been completed!')
+    } else {
+      setProgress((prev) => Math.min(prev + 10, 100))
+    }
     setMessage('Login successful')
     setAlert(true)
     setTimeout(() => {
@@ -75,61 +79,42 @@ const Login = () => {
       router.push(isProfileSetupComplete ? '/home' : '/Registration/profileSetup')
     }, 1500)
   }
-
-  const handleGoogleSignIn = async () => {
-    setLoading(true)
-    try {
-      const result = await signIn('google', { callbackUrl: isProfileSetupComplete ? '/home' : '/Registration/profileSetup', redirect: false })
-      if (result?.error) {
-        setMessage(`Google Sign-In failed: ${result.error}`)
-        setAlert(true)
-        setTimeout(() => {
-          setAlert(false)
-          setLoading(false)
-        }, 1500)
-      } else if (result?.ok) {
-        setMessage('Google Sign-In successful')
-        setAlert(true)
-        setTimeout(() => {
-          setAlert(false)
-          setLoading(false)
-        }, 1500)
-      }
-    } catch (error) {
-      setMessage('Google Sign-In failed')
-      setAlert(true)
-      setTimeout(() => {
-        setAlert(false)
-        setLoading(false)
-      }, 1500)
-    }
-  }
+  
+  
 
   return (
     <div className="md:w-full md:flex md:justify-center lg:pt-10">
       <div className="pt-12 px-2 relative pb-8 flex flex-col justify-center items-center">
         <h1 className="text-4xl font-bold uppercase text-center mt-7">Sign In</h1>
+
+        {/* Form to recieve user's input */}
         <form
           className="mt-5 rounded-2xl regShad p-5 overflow-hidden relative flex flex-col justify-between md:w-[500px]  linear_bg"
           onSubmit={handleSubmit}
         >
+          {/* Email input */}
           <div className="inputbox mt-5">
             <input required type="email" onChange={(e) => setEmail(e.target.value)} value={email} />
             <span>Email</span>
             <i></i>
           </div>
+
+          {/* Password input */}
           <div className="inputbox mt-5">
             <input required type="password" onChange={(e) => setPassword(e.target.value)} value={password} />
             <span>Password</span>
             <i></i>
           </div>
+
           <Button
             types="submit"
             style="bg-[#3D3C99] mt-6 rounded font-bold tracking-wider text-xl py-2 z-20"
-            // disabled={loading}
+          // disabled={loading}
           >
             {loading ? 'Authenticating...' : 'Sign In'}
           </Button>
+
+          {/* Redirect if account is not created */}
           <p className="mt-3 z-20">
             Don't have an account? <Link href="/Registration" className="underline">Sign Up</Link>
           </p>
@@ -144,8 +129,6 @@ const Login = () => {
         <div className="optional mt-2">
           <Button
             style="md:w-[360px] border-[#3D3C99] linear_bg hover_btn cursor-pointer bg-transparent border-2 text-[#3D3C99]"
-            onclick={handleGoogleSignIn}
-            // disabled={loading}
           >
             <FaGoogle className="mr-2" />
             Sign In with Google

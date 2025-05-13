@@ -10,6 +10,7 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true)
   const { signedIn, setUser } = useUser()
 
+  // this checks if the user is logged in
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user')
@@ -34,6 +35,7 @@ export default function Home() {
     }
   }, [setUser])
 
+  // this sets a load status duration while page loads
   useEffect(() => {
     const timer = setTimeout(() => { setLoading(false) }, 10000)
 
@@ -53,7 +55,7 @@ export default function Home() {
     }
   }, [])
 
-  if (loading) return <Loader />;
-  if (!signedIn) return <Registration/>
-  return <MainPage />
+  if (loading) return <Loader />; //if page isn't reading yes, the loader component will be displayed
+  if (!signedIn) return <Registration/> //if user isn't registered or logged in, he/she is return to the registration page
+  return <MainPage /> //when all conditions are resolved the main page is accessed
 }

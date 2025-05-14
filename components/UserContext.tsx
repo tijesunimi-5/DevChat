@@ -38,6 +38,8 @@ interface UserContextProps {
   registrationProgress: number
   setTechStackProgress: React.Dispatch<React.SetStateAction<number>>
   techStackProgress: number
+  setAlertMessage: React.Dispatch<React.SetStateAction<string>>
+  alertMessage: string
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined)
@@ -71,6 +73,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [barVisible, setBarVisible] = useState<boolean>(false)
   const [registrationProgress, setRegistrationProgress] = useState<number>(0)
   const [techStackProgress, setTechStackProgress] = useState<number>(0)
+  const [alertMessage, setAlertMessage] = useState<string>(' ')
 
   // Hydrate states from localStorage
   useEffect(() => {
@@ -220,7 +223,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         setRegistrationProgress,
         registrationProgress,
         setTechStackProgress,
-        techStackProgress
+        techStackProgress,
+        setAlertMessage,
+        alertMessage
       }}
     >
       {children}

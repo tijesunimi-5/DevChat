@@ -13,9 +13,8 @@ const Registration = () => {
   const [password, setPassword] = useState<string>('')
   const [message, setMessage] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
-  const [alert, setAlert] = useState<boolean>(false)
   const router = useRouter()
-  const {  setUser, signedIn, setSignedIn, setLinkUploadProgress, isProfileSetupComplete, setRegistrationProgress, setProgress } = useUser()
+  const {  setUser, signedIn, setSignedIn, setLinkUploadProgress, isProfileSetupComplete, setRegistrationProgress, setProgress, setAlertMessage } = useUser()
 
   // this checks if the user is already signed in and redirects them to the home page if not, it clears the local storage
   useEffect(() => {
@@ -35,10 +34,8 @@ const Registration = () => {
     e.preventDefault()
     setLoading(true)
     if (!fullname || !email || !password) {
-      setMessage('Please fill out all fields')
-      setAlert(true)
+      setAlertMessage('Please fill out all fields')
       setTimeout(() => {
-        setAlert(false)
         setLoading(false)
       }, 1500)
       return
@@ -49,13 +46,11 @@ const Registration = () => {
     const userData = { fullname, email, password, firstName }
     setUser(userData)
     setSignedIn(true)
-    setMessage('Account created successfully')
-    setAlert(true)
+    setAlertMessage('Account created successfully')
     setRegistrationProgress(100)
     setProgress((prev) => Math.min(prev + 10, 100)) //this sets the progress to 10% if the registration is successful
     setTimeout(() => {
       setLoading(false)
-      setAlert(false)
       router.push('/Registration/profileSetup')
     }, 1500)
   }
@@ -131,8 +126,7 @@ const Registration = () => {
           </Button> */}
         </div>
 
-        {/* Alert message */}
-        {alert && <Alert msg={message} />}
+        
       </div>
     </div>
   )

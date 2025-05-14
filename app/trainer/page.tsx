@@ -3,9 +3,10 @@ import Button from '@/components/Button';
 import { useUser } from '@/components/UserContext';
 import React, { useEffect, useState, useRef } from 'react';
 import { techStacks } from '../../techdata';
+import Alert from '@/components/Alert';
 
 const Page = () => {
-  const { user, setLinkUploadProgress, linkUploadProgress, devInfo, setDevInfo, setQnAProgress, QnAProgress, setTrainModelProgress, barVisible } = useUser();
+  const { user, setLinkUploadProgress, linkUploadProgress, devInfo, setDevInfo, setQnAProgress, QnAProgress, setTrainModelProgress, barVisible, setProgress, trainModelProgress, setAlertMessage } = useUser();
   const [edit, setEdit] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -18,6 +19,7 @@ const Page = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
+  // This takes the firstname, and make sure first character is in uppercase 
   const capitalizeFullnameFirstLetters = (name?: string) => {
     if (name) {
       return name
@@ -61,7 +63,7 @@ const Page = () => {
     }
   }, []);
 
-  // Save project
+  // Save project - it handles the project links, portfolio links
   const saveProject = () => {
     if (!portfolioLink || !portfolioInfo) return;
 
@@ -73,8 +75,10 @@ const Page = () => {
     setPortfolioLink('');
     setPortfolioInfo('');
 
+    // this checks if the link has not been filled before, if it hasn't, it sets linkupload to make it filled, and also increases progress by 10%
     if (linkUploadProgress < 100) {
       setLinkUploadProgress(100);
+      setProgress((prev) => Math.min(prev + 10, 100))
     }
 
     setLoading(true);
@@ -101,8 +105,9 @@ const Page = () => {
   const saveMoreInfo = () => {
     localStorage.setItem('dev-more-info', moreInfo);
 
-    if (moreInfo && QnAProgress < 100) {
+    if (QnAProgress < 100) {
       setQnAProgress(100);
+      setProgress((prev) => Math.min(prev + 10, 100))
     }
 
     setLoading(true);
@@ -112,6 +117,7 @@ const Page = () => {
     }, 2000);
   };
 
+  // this handle when the file input is toggled and it get's the file inputed...
   const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -119,6 +125,7 @@ const Page = () => {
     }
   };
 
+  // this handle the dev field edit function, incase user wants to change from frontend to full stack
   const handleDevFieldEdit = (): void => {
     if (!devFieldEdit.trim()) {
       console.warn('Dev field is empty. Not saving.');
@@ -139,12 +146,31 @@ const Page = () => {
     setEdit(null);
   };
 
+  // the edit button trigger it knows which button is clicked
   const editBtn = (index: number) => {
     setEdit(index);
   };
 
+  // this function makes sure all fields are filled before the trainmodel function is effective
+  const fullTrain = () => {
+    if (!portfolioInfo && !portfolioLink || linkUploadProgress < 100) {
+      setAlertMessage('Provide a portfolio link and information - so chatbot can have an information to learn from')
+      return
+    }
+
+    //if all conditions are met, we then proceed to train model
+    trainModel()
+  }
+
+  // the final step for full training also setting the progress to be +50%
   const trainModel = () => {
-    setTrainModelProgress((prev) => prev + 100);
+    
+
+    //if all question and informations are filled, this should be next -setting progress
+    if (trainModelProgress < 100) {
+      setTrainModelProgress(100)
+      setProgress((prev) => Math.min(prev + 50, 100))
+    }
   };
 
   // Get tech stack specialties for dropdown
@@ -153,6 +179,10 @@ const Page = () => {
   return (
     <div ref={rootRef} className="px-3 pt-12 md:px-9 md:pt-14 lg:px-14 lg:pt-16 relative xl:ml-[100px]">
       {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0`}></div>)}
+      {/* ----- Alert ----- */}
+      {/* <p className='text-center absolute top-0 right-0 left-0 bg-gen'>{alert}</p> */}
+      <Alert  />
+
       {/* ----- Tips ----- */}
       <ul>
         <h2 className="text-[22px] font-bold tracking-wide lg:mt-5">Tips:</h2>
@@ -276,7 +306,7 @@ const Page = () => {
           <h1 className="additional text-[22px] font-bold tracking-wide">More Info</h1>
           <p className="tip xl:my-3">• Add additional information about yourself here</p>
           <textarea
-            className="regShad resize-none h-[100px] outline-none w-[350px] mt-2 px-2 lg:w-[800px] lg:h-[200px]"
+            className="regShad resize-none h-[100px] outline-none w-[310px] mt-2 px-2 lg:w-[800px] lg:h-[200px]"
             value={moreInfo}
             onChange={(e) => setMoreInfo(e.target.value)}
           />
@@ -285,7 +315,7 @@ const Page = () => {
           </Button>
         </div>
 
-        <Button style="mb-5 h-[35px] ml-[100px] lg:ml-[400px] lg:mb-20 xl:ml-[500px] xl:mt-20" onclick={trainModel}>
+        <Button style="mb-5 h-[35px] ml-[100px] lg:ml-[400px] lg:mb-20 xl:ml-[500px] xl:mt-20" onclick={fullTrain}>
           Train Model
         </Button>
 

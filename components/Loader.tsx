@@ -5,6 +5,7 @@ import { FaMessage } from 'react-icons/fa6'
 const Loader = () => {
   //this is the text that is displayed when loading...
   const text: string[] = [
+    '',
     'Unlock the power of AI: Elevate your portfolio with intelligent chatbots.',
     'Effortlessly showcase your expertise with AI-Powered chatbots.',
     'Stand out with AI-Driven chatbots that answer questions about you.',
@@ -23,8 +24,8 @@ const Loader = () => {
         const nextIndex = (text.indexOf(currentText) + 1) % text.length;
         setCurrentText(text[nextIndex])
         setOpacity(true)
-      }, 1000)
-    }, 2000)
+      }, 900)
+    }, 1500)
 
     return () => clearInterval(interval)
   }, [currentText])

@@ -17,7 +17,7 @@ const Page = () => {
   const [userStack, setUserStack] = useState<string[]>([]);
   const [techs, setTechs] = useState<string[]>([]);
   const [otherTechs, setOtherTechs] = useState<string[]>([]);
-  const {  setProgress, devInfo, setDevInfo, setIsProfileSetupComplete, signedIn, setTechStackProgress } = useUser();
+  const {  setProgress, devInfo, setDevInfo, setIsProfileSetupComplete, signedIn, setTechStackProgress, setAlertMessage } = useUser();
   const router = useRouter();
 
   // This gets the tech line the person is into either, frontend or backend or ml...
@@ -90,14 +90,12 @@ const Page = () => {
   // final expression when all requirements are attended to
   const nextStep = () => {
     if (devInfo.DevExperience === 0 || devInfo.DevStack.length === 0) {
-      setMessage('Select all fields!');
-      setAlert(true);
+      setAlertMessage('Select all fields!');
       setTimeout(() => setAlert(false), 2000);
       return;
     }
 
-    setMessage('20% Completed!');
-    setAlert(true);
+    setAlertMessage('20% Completed!');
     setTimeout(() => setAlert(false), 2000);
     setIsProfileSetupComplete(true); // Mark profile setup as complete
     localStorage.setItem('isProfileSetupComplete', 'true');
@@ -209,7 +207,6 @@ const Page = () => {
             </div>
           </div>
         </div>
-        {alert && <Alert msg={message} />}
       </div>
     </div>
   );

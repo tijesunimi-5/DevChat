@@ -6,6 +6,7 @@ import { useUser } from './UserContext'
 import { FaCog, FaFile, FaFlask, FaHome, FaLink, FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa'
 import { FaMessage } from 'react-icons/fa6'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 interface MobileBarProps {
   isVisible: boolean;
@@ -15,6 +16,7 @@ interface MobileBarProps {
 const MobileBar = ({ isVisible, setVisible }: MobileBarProps) => {
   const [active, setActive] = useState<null | number>(null)
   const { user, signedIn, logout, setBarVisible } = useUser()
+  const router = useRouter()
 
   const capitalizeFirstName = (name?: string) => {
     if (name) {
@@ -40,6 +42,7 @@ const MobileBar = ({ isVisible, setVisible }: MobileBarProps) => {
 
   const handleLogout = () => {
     logout()
+    router.push('/')
     setVisible(false)
   }
 

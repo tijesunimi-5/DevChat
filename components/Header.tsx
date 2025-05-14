@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useUser } from './UserContext'
 import Button from './Button'
 import { useRouter } from 'next/navigation'
+import Alert from './Alert'
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false)
@@ -68,6 +69,7 @@ const Header = () => {
           Log Out
         </Button>
       )}
+      <Alert />
     </header>
   )
 }

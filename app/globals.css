@@ -51,6 +51,10 @@ body {
     background: #fff;
   }
 }
+.bg-gen {
+  background: #3D3C99;
+  color: white;
+}
 
 .linear_bg {
   background: linear-gradient(to right bottom, #000 60%, #1f1f1f 20%);

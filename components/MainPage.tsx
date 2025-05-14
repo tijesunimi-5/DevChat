@@ -6,6 +6,7 @@ import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Registration from './Registration'
+import Loader from './Loader'
 gsap.registerPlugin(ScrollTrigger)
 
 const MainPage: React.FC = () => {
@@ -29,7 +30,7 @@ const MainPage: React.FC = () => {
   useEffect(() => {
     if (registrationProgress === 100) {
       setRegisterProgress(100)
-    } 
+    }
     if (techStackProgress === 100) {
       setClientStack(100)
     }
@@ -57,25 +58,9 @@ const MainPage: React.FC = () => {
     } else {
       setNextStep('Completed, Congratulations!🎉 You can now preview and deploy your model');
     }
-
-    //this checks if the user has provided link to portfolio
-    if (
-      typeof linkUploadProgress === 'number' &&
-      typeof progress === 'number' &&
-      linkUploadProgress === 100
-    ) {
-      setProgress((prev) => prev + 10)
-    }
-
-    if (QnAProgress === 100) {
-      setProgress((prev) => prev + 20)
-    }
-
-    if (trainModelProgress === 100) {
-      setProgress((prev) => prev + 50)
-    }
-
   }, [user, signedIn, linkUploadProgress, QnAProgress, trainModelProgress])
+
+
 
   // gsap animation
   useEffect(() => {
@@ -113,15 +98,18 @@ const MainPage: React.FC = () => {
     });
   })
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader />;
   if (!signedIn || !isProfileSetupComplete) return <Registration />;
   return (
     <div className='pt-10 px-3 md:px-24 xl:px-[220px] relative'>
       {barVisible && (<div className={`blur absolute top-0 right-0 left-0 bottom-0 transition-all duration-500 ease-in-out`}></div>)}
+      {/* ---- welcome greeting ---- */}
       <div className="welcome text-xl mt-5 font-bold relative lg:text-[28px] lg:pt-5 xl:ml-[150px] xl:mt-10">
         Welcome, {firstname} 👋
         <span className='bg-[#0a0a0a] cover absolute w-full h-full right-0'></span>
       </div>
+
+      {/* ---- Next step higlight ---- */}
       <div className='mt-5 px-2 py-3 rounded regShad flex justify-between overflow-hidden md:h-[200px] xl:w-[800px] xl:h-[220px] xl:ml-[150px] linear_bg'>
         <div className='flex flex-col'>
           <p className='text-[18px] fade-txt2 md:text-[24px]'>You're {progress}% set for your model</p>
@@ -131,6 +119,7 @@ const MainPage: React.FC = () => {
             {nextStep}
           </div>
 
+          {/* if the progress is less than 100 then show that there's a next step else show */}
           {progress < 100 ?
             (
               <>
@@ -147,19 +136,23 @@ const MainPage: React.FC = () => {
               </>
             )}
         </div>
+        {/* ---- visualize the progress bar ---- */}
         <div className='xl:mr-10'>
           <CircularProgress percentage={progress} />
         </div>
       </div>
 
+      {/* ---- section to display the progress status for each step ---- */}
       <div className="steps mt-20 flex flex-col xl:ml-[140px]">
         <h1 className='text-center text-3xl font-bold xl:ml-[-110px]'>Steps</h1>
         <div className='flex mt-5'>
+          {/* ---- account creation progress ---- */}
           <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl scale md:h-[250px] linear_bg">
             <h2 className='text-[18px] pt-2'>Create an account</h2>
             <CircularProgress percentage={registerProgress} />
           </div>
 
+          {/* ---- tech stack progress ---- */}
           <div className="creation flex flex-col regShad justify-center items-center w-[400px] ml-5 rounded-xl relative scale2 linear_bg">
             <h2 className='pt-2 text-[18px] text-center'>Choose your tech stack</h2>
             <CircularProgress percentage={clientStack} />
@@ -168,6 +161,7 @@ const MainPage: React.FC = () => {
         </div>
 
         <div className='flex mt-8'>
+          {/* ---- project link and info progress ---- */}
           <div className="creation flex flex-col regShad justify-center items-center w-[400px] rounded-xl relative pb-6 scale3 md:h-[250px] linear_bg">
             <h2 className='text-[18px] pt-2 text-center'>Upload your links...</h2>
             <CircularProgress percentage={linkUploadProgress} />
@@ -184,6 +178,7 @@ const MainPage: React.FC = () => {
           </div>
 
           <div className="creation flex flex-col regShad justify-center items-center w-[400px] ml-5 rounded-xl relative pb-6 scale4 linear_bg">
+            {/* ---- Question and answer progress ---- */}
             <h2 className='pt-2 text-[18px]'>Basic QnA</h2>
             <CircularProgress percentage={QnAProgress} />
             {QnAProgress < 100
@@ -200,6 +195,7 @@ const MainPage: React.FC = () => {
         </div>
 
         <div>
+          {/* ---- train chatbot progress ---- */}
           <div className="train flex flex-col regShad justify-center items-center w-[300px] mt-8 ml-5 rounded-xl relative pb-6 scroll scale-[0.7] md:w-[480px] md:ml-0 lg:ml-[150px] lg:w-[700px] linear_bg">
             <h2 className='pt-2 text-[18px]'>Train the chatbot model</h2>
             <CircularProgress percentage={trainModelProgress} />
@@ -208,10 +204,11 @@ const MainPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="analytics mt-14 xl:ml-[-100px]">
+{/* ---- analytics for developers to know how well their model is coming up and this might be toggled off till the purpose is ready to be scaled up --- */}
+        {/* <div className="analytics mt-14 xl:ml-[-100px]">
           <h1 className='text-3xl font-bold text-center mb-3'>Anayltics</h1>
           <CircularProgress percentage={0} />
-        </div>
+        </div> */}
       </div>
 
       <div className="info mt-10 xl:mb-20">

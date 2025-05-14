@@ -12,9 +12,8 @@ const Login = () => {
   const [password, setPassword] = useState<string>('')
   const [message, setMessage] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
-  const [alert, setAlert] = useState<boolean>(false)
   const router = useRouter()
-  const { setSignedIn, setLinkUploadProgress, isProfileSetupComplete, user, registrationProgress, setProgress } = useUser()
+  const { setSignedIn, setLinkUploadProgress, isProfileSetupComplete, user, registrationProgress, setProgress, setAlertMessage } = useUser()
 
   // this check if the profile setup is complete, if it is, redirect to home, and also checks if the user data is available, if not, all progress and data are set to null
   useEffect(() => {
@@ -33,10 +32,8 @@ const Login = () => {
     e.preventDefault()
     setLoading(true)
     if (!email || !password) {
-      setMessage('Please fill out all fields')
-      setAlert(true)
+      setAlertMessage('Please fill out all fields')
       setTimeout(() => {
-        setAlert(false)
         setLoading(false)
       }, 1500)
       return
@@ -44,10 +41,8 @@ const Login = () => {
 
     const storedUser = localStorage.getItem('user')
     if (!storedUser) {
-      setMessage('No account found. Please sign up.')
-      setAlert(true)
+      setAlertMessage('No account found. Please sign up.')
       setTimeout(() => {
-        setAlert(false)
         setLoading(false)
       }, 1500)
       return
@@ -55,10 +50,8 @@ const Login = () => {
 
     const parsedUser = JSON.parse(storedUser)
     if (email !== parsedUser.email || password !== parsedUser.password) {
-      setMessage('Invalid email or password')
-      setAlert(true)
+      setAlertMessage('Invalid email or password')
       setTimeout(() => {
-        setAlert(false)
         setLoading(false)
       }, 1500)
       return
@@ -71,10 +64,8 @@ const Login = () => {
     } else {
       setProgress((prev) => Math.min(prev + 10, 100))
     }
-    setMessage('Login successful')
-    setAlert(true)
+    setAlertMessage('Login successful')
     setTimeout(() => {
-      setAlert(false)
       setLoading(false)
       router.push(isProfileSetupComplete ? '/home' : '/Registration/profileSetup')
     }, 1500)
@@ -142,7 +133,6 @@ const Login = () => {
             Sign In with Github
           </Button> */}
         </div>
-        {alert && <Alert msg={message} />}
       </div>
     </div>
   )
